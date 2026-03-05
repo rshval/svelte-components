@@ -1,0 +1,67 @@
+:root {
+	--transition-time: 0.1s;
+	--theme-safe-area-left: 0px;
+	--theme-safe-area-right: 0px;
+	--theme-safe-area-top: 0px;
+	--theme-safe-area-bottom: 0px;
+	--theme-safe-area-outer-left: 0px;
+	--theme-safe-area-outer-right: 0px;
+	--theme-device-pixel-ratio: 1;
+}
+
+@supports (left: env(safe-area-inset-left)) {
+	:root {
+		--theme-safe-area-top: env(safe-area-inset-top);
+		--theme-safe-area-bottom: env(safe-area-inset-bottom);
+	}
+
+	:root .ios-edges,
+	:root .ios-left-edge,
+	:root .panel-left,
+	:root .popup,
+	:root .safe-area-left,
+	:root .safe-areas,
+	:root .sheet-modal {
+		--theme-safe-area-left: env(safe-area-inset-left);
+		--theme-safe-area-outer-left: env(safe-area-inset-left);
+	}
+
+	:root .ios-edges,
+	:root .ios-right-edge,
+	:root .panel-right,
+	:root .popup,
+	:root .safe-area-right,
+	:root .safe-areas,
+	:root .sheet-modal {
+		--theme-safe-area-right: env(safe-area-inset-right);
+		--theme-safe-area-outer-right: env(safe-area-inset-right);
+	}
+
+	:root .no-ios-edges,
+	:root .no-ios-left-edge,
+	:root .no-safe-area-left,
+	:root .no-safe-areas {
+		--theme-safe-area-left: 0px;
+		--theme-safe-area-outer-left: 0px;
+	}
+
+	:root .no-ios-edges,
+	:root .no-ios-right-edge,
+	:root .no-safe-area-right,
+	:root .no-safe-areas {
+		--theme-safe-area-right: 0px;
+		--theme-safe-area-outer-right: 0px;
+	}
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+	:root {
+		--theme-device-pixel-ratio: 2;
+	}
+}
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 3dppx) {
+	:root {
+		--theme-device-pixel-ratio: 3;
+	}
+}
