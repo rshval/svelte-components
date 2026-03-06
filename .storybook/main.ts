@@ -7,6 +7,12 @@ const config: StorybookConfig = {
 		name: '@storybook/sveltekit',
 		options: {}
 	},
+	viteFinal: async (viteConfig) => {
+		delete viteConfig.base;
+		delete viteConfig.root;
+
+		return viteConfig;
+	},
 	docs: {
 		autodocs: 'tag'
 	}
