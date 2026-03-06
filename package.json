@@ -1,6 +1,6 @@
 {
   "name": "@rshval/svelte-components",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run prepack",
@@ -56,6 +56,10 @@
     }
   },
   "peerDependencies": {
+    "@tiptap/core": "^3.20.0",
+    "@tiptap/extension-bubble-menu": "^3.20.0",
+    "@tiptap/extension-underline": "^3.20.0",
+    "@tiptap/starter-kit": "^3.20.0",
     "@sveltejs/kit": "^2.53.4",
     "svelte": "^5.53.7"
   },
