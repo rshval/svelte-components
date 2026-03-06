@@ -69,7 +69,6 @@
     "@eslint/compat": "^2.0.2",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.58.2",
-    "@popperjs/core": "^2.11.8",
     "@storybook/addon-a11y": "^10.2.15",
     "@storybook/addon-docs": "^10.2.15",
     "@storybook/sveltekit": "^10.2.15",
@@ -114,6 +113,7 @@
   "description": "Reusable Svelte 5 UI component library (forms, table, map, notifications, drawers and stores).",
   "license": "MIT",
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "@capacitor/core": "^8.1.0",
     "@capacitor/device": "^8.0.1",
     "@capacitor/geolocation": "^8.1.0",
