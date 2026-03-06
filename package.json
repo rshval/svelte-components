@@ -67,6 +67,7 @@
     "@playwright/test": "^1.58.2",
     "@popperjs/core": "^2.11.8",
     "@storybook/addon-a11y": "^9.1.19",
+    "@storybook/addon-docs": "^9.1.20",
     "@storybook/sveltekit": "^9.1.19",
     "@svelte-put/dragscroll": "^4.0.0",
     "@sveltejs/adapter-auto": "^7.0.1",
