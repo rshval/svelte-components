@@ -38,6 +38,9 @@ importers:
       '@tabler/icons-svelte-runes':
         specifier: ^3.39.0
         version: 3.39.0(svelte@5.53.7)
+      '@turf/turf':
+        specifier: ^7.3.4
+        version: 7.3.4
       delay:
         specifier: ^7.0.0
         version: 7.0.0
@@ -117,9 +120,6 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^3.20.1
         version: 3.20.1
-      '@turf/turf':
-        specifier: ^7.3.4
-        version: 7.3.4
       '@vitest/browser':
         specifier: 4.0.18
         version: 4.0.18(vite@7.3.1(jiti@2.6.1)(lightningcss@1.31.1))(vitest@4.0.18)
