@@ -191,7 +191,6 @@ npm publish --access public
 - Изменения обязательных props у компонентов и shape публичных store/helper API также считаются breaking changes.
 - Для потребителей рекомендуется фиксировать major-версию (`^1.x`) и читать changelog перед обновлением.
 
-
 Подробный пошаговый план выноса в отдельный репозиторий: `MIGRATION_TO_STANDALONE.md`.
 
 ## Migration checklist при выносе в отдельный репозиторий
