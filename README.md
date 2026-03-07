@@ -31,6 +31,8 @@ What this means in practice:
 
 If you see `Failed to import $app@latest`, it means the example contains SvelteKit-only aliases (`$app/*`) but is opened in plain Svelte Playground.
 
+Even with the newest Svelte version selected in Playground, `$app/*` remains unavailable there because it is provided by **SvelteKit runtime**, not by the core `svelte` package.
+
 Use one of these options:
 
 - run the example in a SvelteKit project/sandbox;
@@ -45,7 +47,8 @@ npm i @rshval/svelte-components
 Also make sure your project has compatible library dependencies installed:
 
 - `@popperjs/core` — runtime dependency (installed automatically with the package);
-- `svelte`, `@sveltejs/kit`, `@tiptap/*` — peer dependencies that must stay compatible in consumer apps.
+- `svelte`, `@tiptap/*` — peer dependencies that must stay compatible in consumer apps.
+- `@sveltejs/kit` is optional and only needed in consumer apps that use SvelteKit-specific APIs.
 
 ## Quick README navigation
 
@@ -597,7 +600,7 @@ Automated release via Changesets:
 | Package                              | Recommended version |
 | ----------------------------------- | -------------------- |
 | `svelte` (peer)                     | `^5.53.7`            |
-| `@sveltejs/kit` (peer)              | `^2.53.4`            |
+| `@sveltejs/kit` (optional, for SvelteKit apps) | `^2.53.4` |
 | `@tiptap/core` and `@tiptap/*` (peer) | `^3.20.0`          |
 | `@popperjs/core` (runtime)          | `^2.11.8`            |
 
