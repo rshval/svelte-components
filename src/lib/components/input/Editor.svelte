@@ -94,9 +94,9 @@
 	}
 </script>
 
-<div style="position: relative" class="editor overflow-hidden rounded-xl">
+<div style="position: relative" class="editor p-2 border border-base-300 overflow-hidden rounded-xl">
 	{#if isVisible}
-		<div class="fixed-menu mb-2 rounded-xl bg-base-200/50 p-2">
+		<div class="fixed-menu mb-1 rounded-xl bg-base-200 p-2">
 			<Button
 				class={[{ 'btn-active': isActiveButtonH1 }, 'btn-sm']}
 				onclick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -163,7 +163,7 @@
 		{/if}
 	</ul>
 
-	<div class="textarea mt-4 flex min-h-20 w-full flex-col rounded-xl bg-base-100 p-2">
+	<div class="textarea mt-2 flex min-h-20 w-full flex-col rounded-xl bg-base-100 p-2">
 		<div bind:this={element} class="editor__element prose max-h-80 min-h-24 overflow-scroll"></div>
 	</div>
 </div>
