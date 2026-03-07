@@ -47,7 +47,7 @@
 			</select>
 		{/if}
 		<Button class="btn-outline btn-sm" disabled={!canPrev} onclick={onPrev}>Назад</Button>
-		<span class="text-sm">{pageLabel || `Стр. ${page}`}</span>
+		<span class="text-sm whitespace-nowrap">{pageLabel || `Стр. ${page}`}</span>
 		<Button class="btn-outline btn-sm" disabled={!canNext} onclick={onNext}>Вперёд</Button>
 	</div>
 </div>

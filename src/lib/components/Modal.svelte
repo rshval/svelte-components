@@ -52,8 +52,7 @@
 <dialog
 	id={dialogId}
 	bind:this={element}
-	class={['modal', 'modal-bottom', 'sm:modal-middle', className]}
-	class:overflow-hidden
+	class={['modal', 'modal-bottom', 'sm:modal-middle' , 'overflow-hidden', className]}
 	{...props}
 >
 	<div
