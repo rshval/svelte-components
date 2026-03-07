@@ -11,3 +11,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Password: Story = {
+	args: {
+		label: 'Пароль',
+		type: 'password',
+		placeholder: 'Введите пароль'
+	}
+};
