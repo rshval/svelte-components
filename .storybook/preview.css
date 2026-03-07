@@ -1,1 +1,17 @@
 @import '../src/routes/layout.css';
+@import '../src/lib/components/theme/style.css';
+
+html,
+body,
+#storybook-root {
+	min-height: 100%;
+}
+
+body.sb-daisy-preview {
+	background-color: var(--color-base-200);
+	color: var(--color-base-content);
+}
+
+#storybook-root {
+	padding: 1rem;
+}
