@@ -2,9 +2,9 @@
 	import './style.css';
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
+	import { BROWSER } from 'esm-env';
 	import { initDeviceInfo } from '$lib/stores/plugins/device-info.store.js';
 	import darkModeStore from './dark-mode.store.js';
-	import { browser } from '$app/environment';
 
 	let {
 		children,
@@ -19,7 +19,7 @@
 	} = $props();
 
 	$effect(() => {
-		if (browser) {
+		if (BROWSER) {
 			darkModeStore.initDarkMode(themes);
 		}
 	});

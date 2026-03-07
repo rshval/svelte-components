@@ -27,6 +27,15 @@ What this means in practice:
 - For integration scenarios, prefer Svelte sandbox / a local SvelteKit sandbox.
 - The README captures working patterns and should be used as the primary reference.
 
+### Svelte Playground note
+
+If you see `Failed to import $app@latest`, it means the example contains SvelteKit-only aliases (`$app/*`) but is opened in plain Svelte Playground.
+
+Use one of these options:
+
+- run the example in a SvelteKit project/sandbox;
+- replace `$app/*` imports with environment-agnostic alternatives before running in plain Svelte Playground.
+
 ## Installation
 
 ```bash

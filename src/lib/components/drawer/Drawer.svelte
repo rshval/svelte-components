@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { beforeNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import { isOpenedDrawer } from './drawer.store.js';
 	import type { Snippet } from 'svelte';
 	let {
@@ -10,8 +10,29 @@
 		button?: Snippet;
 	} = $props();
 
-	beforeNavigate(({ from, to }) => {
-		$isOpenedDrawer = false;
+	onMount(() => {
+		const closeDrawer = () => {
+			$isOpenedDrawer = false;
+		};
+		const closeOnLinkClick = (event: MouseEvent) => {
+			const target = event.target;
+			if (!(target instanceof Element)) return;
+
+			const link = target.closest('a[href]');
+			if (link) {
+				closeDrawer();
+			}
+		};
+
+		window.addEventListener('popstate', closeDrawer);
+		window.addEventListener('hashchange', closeDrawer);
+		document.addEventListener('click', closeOnLinkClick);
+
+		return () => {
+			window.removeEventListener('popstate', closeDrawer);
+			window.removeEventListener('hashchange', closeDrawer);
+			document.removeEventListener('click', closeOnLinkClick);
+		};
 	});
 </script>
 
