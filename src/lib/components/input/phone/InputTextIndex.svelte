@@ -263,7 +263,6 @@
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,
-		country,
 		shouldExtractCallingCode,
 		value
 	}}
