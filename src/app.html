@@ -4,6 +4,28 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			(() => {
+				const THEME_ATTRIBUTE = 'data-theme';
+				const DARK_MODE_KEY = 'CapacitorStorage.darkMode';
+				const LEGACY_DARK_MODE_KEY = '_cap_darkMode';
+				const LIGHT_THEME = 'light';
+				const DARK_THEME = 'dark';
+
+				try {
+					const saved = localStorage.getItem(DARK_MODE_KEY) ?? localStorage.getItem(LEGACY_DARK_MODE_KEY);
+					const fromStorage = saved === 'true' ? true : saved === 'false' ? false : null;
+					const systemDark =
+						typeof window.matchMedia === 'function' &&
+						window.matchMedia('(prefers-color-scheme: dark)').matches;
+					const isDark = fromStorage ?? systemDark;
+
+					document.documentElement.setAttribute(THEME_ATTRIBUTE, isDark ? DARK_THEME : LIGHT_THEME);
+				} catch {
+					document.documentElement.setAttribute(THEME_ATTRIBUTE, LIGHT_THEME);
+				}
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
