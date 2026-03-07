@@ -60,6 +60,7 @@
 		bind:country
 		bind:valid
 		bind:value
+		shouldExtractCallingCode={!disabledCountry}
 		{disabled}
 		bind:el={element}
 		{detailedValue}
