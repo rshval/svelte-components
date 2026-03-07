@@ -31,21 +31,22 @@
 	let isActiveButtonS = $state(false);
 	let isActiveButtonBulletList = $state(false);
 
-	let showBubble = $state(false);
-
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			extensions: [
 				StarterKit,
 				BubbleMenu.configure({
-					element: bubbleMenu
+					element: bubbleMenu,
+					shouldShow: ({ state }) => !state.selection.empty,
+					tippyOptions: {
+						duration: 0
+					}
 				}),
 				Underline
 			],
 			content: value ? DOMPurify.sanitize(value) : '',
 			onTransaction: () => {
-				showBubble = !editor?.state.selection.empty;
 				// force re-render so `editor.isActive` works as expected
 				editor = editor;
 			},
@@ -54,12 +55,10 @@
 			},
 			onUpdate({ editor }) {
 				value = DOMPurify.sanitize(editor.getHTML());
-				showBubble = !editor.state.selection.empty;
 				// The content has changed.
 				getActiveButtons(); //get1
 			},
 			onSelectionUpdate({ editor }) {
-				showBubble = !editor?.state.selection.empty;
 				// The selection has changed.
 				getActiveButtons(); //get2
 			}
@@ -125,10 +124,9 @@
 
 	<ul
 		bind:this={bubbleMenu}
-		class="menu menu-horizontal absolute gap-2 rounded-xl bg-base-100 shadow-lg shadow-gray-300/50"
-		style={showBubble ? '' : 'display: none !important;'}
+		class="menu menu-horizontal gap-2 rounded-xl bg-base-100 shadow-lg shadow-gray-300/50"
 	>
-		{#if isVisible && showBubble}
+		{#if isVisible}
 			<Button
 				onclick={() => editor?.chain().focus().toggleBold().run()}
 				class={[{ 'btn-active': isActiveButtonB }, 'btn-xs']}
