@@ -69,6 +69,33 @@ npm i @rshval/svelte-components
 <Button on:click={() => console.log({ name, role })}>Сохранить</Button>
 ```
 
+#### Поле пароля с кнопкой показать/скрыть
+
+`InputField` поддерживает встроенный toggle пароля: если передать `type="password"`, справа появится кнопка с иконкой глаза.
+
+```svelte
+<script lang="ts">
+	import { InputField } from '@rshval/svelte-components';
+
+	let password = $state('');
+</script>
+
+<InputField
+	bind:value={password}
+	type="password"
+	label="Пароль"
+	placeholder="Введите пароль"
+	autocomplete="new-password"
+/>
+```
+
+Полезные детали:
+
+- Кнопка переключает тип инпута между `password` и `text`.
+- Для доступности у кнопки используется `aria-label`: `Показать пароль` / `Скрыть пароль`.
+- Если `disabled`, кнопка переключения также блокируется.
+- Toggle можно отключить через `passwordToggle={false}`.
+
 ### 3) Модальные окна и уведомления
 
 ```svelte
