@@ -37,6 +37,7 @@
 		updateDetailedValue = $bindable(),
 		updateValid = $bindable(),
 		updateValue = $bindable(),
+		shouldExtractCallingCode = false,
 		class: className,
 		...props
 	}: {
@@ -57,6 +58,7 @@
 		updateDetailedValue?: Partial<DetailedValue>;
 		updateValid?: boolean;
 		updateValue?: string | E164Number | undefined;
+		shouldExtractCallingCode?: boolean;
 	} = $props();
 
 	let inputValue: string | E164Number | undefined = $state(value);
@@ -73,9 +75,14 @@
 		};
 	});
 
-	const handleInputAction = (val: string) => {
+	const handleInputAction = (val: string, extractedCountry?: CountryCode) => {
 		if (props.disabled || props.readonly) return;
-		handleParsePhoneNumber(val, country);
+
+		if (extractedCountry) {
+			doUpdateCountry(extractedCountry);
+		}
+
+		handleParsePhoneNumber(val, extractedCountry ?? country);
 	};
 
 	// Update the country and dispatch event
@@ -256,6 +263,8 @@
 	use:telInputAction={{
 		handler: handleInputAction,
 		spaces: combinedOptions.spaces,
+		country,
+		shouldExtractCallingCode,
 		value
 	}}
 />
