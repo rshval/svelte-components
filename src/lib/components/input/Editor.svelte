@@ -30,6 +30,7 @@
 	let isActiveButtonU = $state(false);
 	let isActiveButtonS = $state(false);
 	let isActiveButtonBulletList = $state(false);
+	let showBubble = $state(false);
 
 	onMount(() => {
 		editor = new Editor({
@@ -40,7 +41,13 @@
 					element: bubbleMenu,
 					shouldShow: ({ state }) => !state.selection.empty,
 					tippyOptions: {
-						duration: 0
+						duration: 0,
+						onShow: () => {
+							showBubble = true;
+						},
+						onHide: () => {
+							showBubble = false;
+						}
 					}
 				}),
 				Underline
@@ -124,7 +131,8 @@
 
 	<ul
 		bind:this={bubbleMenu}
-		class="menu menu-horizontal gap-2 rounded-xl bg-base-100 shadow-lg shadow-gray-300/50"
+		class="menu menu-horizontal absolute gap-2 rounded-xl bg-base-100 shadow-lg shadow-gray-300/50"
+		style={showBubble ? '' : 'visibility: hidden; pointer-events: none;'}
 	>
 		{#if isVisible}
 			<Button
