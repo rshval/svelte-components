@@ -15,11 +15,19 @@
 		class?: any;
 	} = $props();
 	function onClick() {
+		if (typeof $darkModeStore !== 'boolean') {
+			return;
+		}
+
 		darkModeStore.setDarkMode(!$darkModeStore);
 	}
 </script>
 
-<button class={['theme-button swap swap-rotate', className]} onclick={onClick}>
+<button
+	class={['theme-button swap swap-rotate', className]}
+	onclick={onClick}
+	disabled={typeof $darkModeStore !== 'boolean'}
+>
 	{#if typeof $darkModeStore === 'boolean'}
 		<div
 			in:fade={{ duration: animationDuration }}
