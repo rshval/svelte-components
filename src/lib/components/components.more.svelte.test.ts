@@ -125,7 +125,26 @@ describe('Input components', () => {
 
 		const input = screen.getByLabelText('Username');
 		expect(input).toHaveAttribute('id', 'username');
-		expect(input).toHaveClass('input', 'w-full', 'input-primary');
+		expect(input).toHaveClass('grow');
+		expect(input.closest('.input')).toHaveClass('input', 'w-full', 'input-primary');
+	});
+
+	it('InputField password toggles visibility by button', async () => {
+		render(InputField, {
+			props: {
+				label: 'Password',
+				type: 'password',
+				value: 'secret'
+			}
+		});
+
+		const input = screen.getByLabelText('Password');
+		const toggleButton = screen.getByRole('button', { name: 'Показать пароль' });
+
+		expect(input).toHaveAttribute('type', 'password');
+		await fireEvent.click(toggleButton);
+		expect(input).toHaveAttribute('type', 'text');
+		expect(screen.getByRole('button', { name: 'Скрыть пароль' })).toBeInTheDocument();
 	});
 
 	it('Textarea renders id and class names', () => {
