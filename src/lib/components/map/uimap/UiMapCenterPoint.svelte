@@ -119,7 +119,7 @@
 			</div>
 			<div class="relative flex flex-col items-center justify-center">
 				<div
-					class="z-10 -mt-1 h-2 w-2 rounded-4xl bg-gray-400"
+					class="z-10 -mt-1 h-2 w-2 rounded-4xl bg-base-300"
 					style="transform: rotateX(70deg) scale(1.2); opacity:calc(0.5 + {tween.current} / 2)"
 				></div>
 			</div>

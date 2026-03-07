@@ -87,9 +87,9 @@
 	}
 </script>
 
-<div style="position: relative" class="editor mt-2 overflow-hidden rounded-xl bg-gray-100 p-2">
+<div style="position: relative" class="editor mt-2 overflow-hidden rounded-xl bg-base-200 p-2">
 	{#if isVisible}
-		<div class="fixed-menu mb-2 rounded-xl bg-gray-200 p-2">
+		<div class="fixed-menu mb-2 rounded-xl bg-base-300 p-2">
 			<Button
 				class={[{ 'btn-active': isActiveButtonH1 }, 'btn-sm']}
 				onclick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -126,7 +126,7 @@
 	<ul
 		bind:this={bubbleMenu}
 		class="menu menu-horizontal absolute gap-2 rounded-xl bg-base-100 shadow-lg shadow-gray-300/50"
-		style={showBubble ? '' : 'display: none !important;'}
+		style={showBubble ? '' : 'visibility: hidden;'}
 	>
 		{#if isVisible && showBubble}
 			<Button

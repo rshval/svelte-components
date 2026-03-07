@@ -8,7 +8,7 @@
 </script>
 
 {#if shadow}
-	<div class="loader-shadow absolute top-0 left-0 bg-gray-100 opacity-50"></div>
+	<div class="loader-shadow absolute top-0 left-0 bg-base-300 opacity-50"></div>
 {/if}
 <div
 	class={[
