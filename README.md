@@ -648,6 +648,7 @@ npm run build-storybook
 - **Capacitor mode**: uses `@capacitor-mlkit/barcode-scanning` if installed.
 - Built-in dedupe (`cooldownMs`) prevents duplicate check-in actions for repeated scans.
 - Deep-link parser supports payload like `/board/tickets/scanner?ticket=...`.
+- Visual scan feedback: green frame + check icon for success, red frame + cross icon for invalid scan.
 
 ```svelte
 <script lang="ts">
@@ -694,6 +695,9 @@ npm run build-storybook
 	formats={['qr_code']}
 	cooldownMs={2500}
 	highlightFrame
+	showScanResult
+	scanResultDurationMs={1400}
+	isSuccessfulScan={(payload) => payload.kind === 'check-in-link' && Boolean(payload.ticketNumber)}
 	vibrateOnDetect
 	onDetect={loadTicketStatus}
 	onError={(error) => (message = error.message)}
@@ -719,3 +723,9 @@ const scanner = createQrScanner({
 
 await scanner.start();
 ```
+
+`QrScanner` visual feedback props:
+
+- `showScanResult` (`true` by default) — show status icon in the center after each detection.
+- `scanResultDurationMs` (`1400` by default) — how long success/error state is displayed.
+- `isSuccessfulScan` — custom predicate to mark a payload as successful; if returns `false`, error state is shown.
