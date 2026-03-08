@@ -647,7 +647,7 @@ npm run build-storybook
 - **Web mode**: uses native `BarcodeDetector`, and falls back to `@zxing/browser`.
 - **Capacitor mode**: uses `@capacitor-mlkit/barcode-scanning` if installed.
 - Built-in dedupe (`cooldownMs`) prevents duplicate check-in actions for repeated scans.
-- Deep-link parser supports payload like `/board/tickets/check-in?ticket=...`.
+- Deep-link parser supports payload like `/board/tickets/scanner?ticket=...`.
 
 ```svelte
 <script lang="ts">
