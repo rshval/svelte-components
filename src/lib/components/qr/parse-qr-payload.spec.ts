@@ -3,11 +3,11 @@ import { parseQrPayload } from './parse-qr-payload.js';
 
 describe('parseQrPayload', () => {
 	it('parses check-in deep-link and extracts ticketNumber', () => {
-		const payload = parseQrPayload('/board/tickets/check-in?ticket=EVT-001');
+		const payload = parseQrPayload('/board/tickets/scanner?ticket=EVT-001');
 
 		expect(payload.kind).toBe('check-in-link');
 		expect(payload.ticketNumber).toBe('EVT-001');
-		expect(payload.path).toBe('/board/tickets/check-in');
+		expect(payload.path).toBe('/board/tickets/scanner');
 	});
 
 	it('parses generic URL payload', () => {

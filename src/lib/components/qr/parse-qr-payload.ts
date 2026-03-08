@@ -1,6 +1,6 @@
 import type { ParsedQrPayload } from './types.js';
 
-const CHECK_IN_PATH = '/board/tickets/check-in';
+const CHECK_IN_PATH = '/board/tickets/scanner';
 
 export function parseQrPayload(raw: string, baseUrl = 'https://qr.local'): ParsedQrPayload {
 	const value = raw.trim();
