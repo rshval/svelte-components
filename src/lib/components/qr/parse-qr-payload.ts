@@ -1,8 +1,12 @@
 import type { ParsedQrPayload } from './types.js';
 
-const CHECK_IN_PATH = '/board/tickets/scanner';
+const DEFAULT_CHECK_IN_PATH = '/board/tickets/scanner';
 
-export function parseQrPayload(raw: string, baseUrl = 'https://qr.local'): ParsedQrPayload {
+export function parseQrPayload(
+	raw: string,
+	baseUrl = 'https://qr.local',
+	checkInPath = DEFAULT_CHECK_IN_PATH
+): ParsedQrPayload {
 	const value = raw.trim();
 
 	if (!value) {
@@ -15,7 +19,7 @@ export function parseQrPayload(raw: string, baseUrl = 'https://qr.local'): Parse
 	try {
 		const url = value.startsWith('/') ? new URL(value, baseUrl) : new URL(value);
 		const query = Object.fromEntries(url.searchParams.entries());
-		const isCheckInPayload = normalizePath(url.pathname) === CHECK_IN_PATH;
+		const isCheckInPayload = normalizePath(url.pathname) === normalizePath(checkInPath);
 		const ticketNumber = query.ticket || query.ticketNumber;
 
 		return {

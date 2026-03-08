@@ -33,6 +33,8 @@ export type QrScannerError = {
 export type CreateQrScannerOptions = {
 	cooldownMs?: number;
 	formats?: QrScannerFormat[];
+	baseUrl?: string;
+	checkInPath?: string;
 	vibrateOnDetect?: boolean;
 	beepOnDetect?: boolean;
 	onDetect?: (payload: ParsedQrPayload) => void;

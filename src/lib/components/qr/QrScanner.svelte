@@ -7,6 +7,8 @@
 		autoStart?: boolean;
 		cooldownMs?: number;
 		formats?: QrScannerFormat[];
+		url?: string;
+		checkInPath?: string;
 		highlightFrame?: boolean;
 		vibrateOnDetect?: boolean;
 		beepOnDetect?: boolean;
@@ -23,6 +25,8 @@
 	const scanner = createQrScanner({
 		cooldownMs: props.cooldownMs ?? 2000,
 		formats: props.formats ?? ['qr_code'],
+		baseUrl: props.url,
+		checkInPath: props.checkInPath,
 		vibrateOnDetect: props.vibrateOnDetect ?? true,
 		beepOnDetect: props.beepOnDetect ?? false,
 		onDetect: (payload) => {
