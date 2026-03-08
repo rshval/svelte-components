@@ -12,6 +12,16 @@ export { default as Popup } from './components/Popup.svelte';
 export { default as BreadCrumbs } from './components/BreadCrumbs.svelte';
 export { default as Timer } from './components/Timer.svelte';
 export { default as Toast } from './components/Toast.svelte';
+export { QrScanner, createQrScanner, parseQrPayload } from './components/qr/index.js';
+export type {
+	CreateQrScannerOptions,
+	ParsedQrPayload,
+	QrScannerError,
+	QrScannerErrorCode,
+	QrScannerFormat,
+	QrScannerMode,
+	QrScannerPermission
+} from './components/qr/index.js';
 
 export { InputPhone, type E164Number } from './components/input/phone/index.js';
 export { default as Notifications } from './components/notifications/Notifications.svelte';

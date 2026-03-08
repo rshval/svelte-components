@@ -639,3 +639,83 @@ npm run build-storybook
 ```
 
 `smoke:exports` verifies that after `prepack`, all artifacts declared in `exports` are present in `dist/`.
+
+### QR scanner (event check-in, Web + Capacitor)
+
+`QrScanner` gives a unified scanner API for browser and Capacitor apps.
+
+- **Web mode**: uses native `BarcodeDetector`, and falls back to `@zxing/browser`.
+- **Capacitor mode**: uses `@capacitor-mlkit/barcode-scanning` if installed.
+- Built-in dedupe (`cooldownMs`) prevents duplicate check-in actions for repeated scans.
+- Deep-link parser supports payload like `/board/tickets/check-in?ticket=...`.
+
+```svelte
+<script lang="ts">
+	import { QrScanner, type ParsedQrPayload } from '@rshval/svelte-components';
+
+	type TicketStatus = 'idle' | 'loading' | 'valid' | 'used' | 'invalid';
+
+	let scannerRef: { pause: () => void; resume: () => void } | null = null;
+	let ticketNumber = '';
+	let status: TicketStatus = 'idle';
+	let message = 'Scan ticket QR to begin check-in';
+
+	async function loadTicketStatus(scanned: ParsedQrPayload) {
+		if (!scanned.ticketNumber) {
+			status = 'invalid';
+			message = 'QR does not contain a check-in ticket number';
+			return;
+		}
+
+		ticketNumber = scanned.ticketNumber;
+		status = 'loading';
+		scannerRef?.pause();
+
+		const result = await fetch(`/api/tickets/status?ticket=${ticketNumber}`).then((r) => r.json());
+		status = result.status;
+		message = result.message;
+	}
+
+	async function activateTicket() {
+		await fetch('/api/tickets/activate', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ ticketNumber })
+		});
+
+		status = 'used';
+		message = `Ticket ${ticketNumber} is activated`;
+		scannerRef?.resume();
+	}
+</script>
+
+<QrScanner
+	bind:this={scannerRef}
+	formats={['qr_code']}
+	cooldownMs={2500}
+	highlightFrame
+	vibrateOnDetect
+	onDetect={loadTicketStatus}
+	onError={(error) => (message = error.message)}
+/>
+
+<p>{message}</p>
+
+{#if status === 'valid'}
+	<button class="btn btn-success" onclick={activateTicket}>Activate ticket</button>
+{/if}
+```
+
+If you need lower-level control, use `createQrScanner()` directly:
+
+```ts
+import { createQrScanner } from '@rshval/svelte-components';
+
+const scanner = createQrScanner({
+	cooldownMs: 2000,
+	formats: ['qr_code'],
+	onDetect: (payload) => console.log(payload.ticketNumber)
+});
+
+await scanner.start();
+```

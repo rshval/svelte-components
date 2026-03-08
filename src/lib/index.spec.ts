@@ -21,6 +21,7 @@ const componentExports = [
 	'Notification',
 	'Notifications',
 	'Popup',
+	'QrScanner',
 	'Select',
 	'Switch',
 	'Table',
