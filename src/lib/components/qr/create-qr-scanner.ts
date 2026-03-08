@@ -309,7 +309,7 @@ export function createQrScanner(options: CreateQrScannerOptions = {}) {
 			return;
 		}
 		dedupeMap.set(rawValue, now);
-		const parsed = parseQrPayload(rawValue);
+		const parsed = parseQrPayload(rawValue, options.baseUrl, options.checkInPath);
 		lastPayload.set(parsed);
 		notifyFeedback();
 		options.onDetect?.(parsed);
