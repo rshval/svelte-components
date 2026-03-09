@@ -50,6 +50,19 @@ Also make sure your project has compatible library dependencies installed:
 - `svelte`, `@tiptap/*` — peer dependencies that must stay compatible in consumer apps.
 - `@sveltejs/kit` is optional and only needed in consumer apps that use SvelteKit-specific APIs.
 
+### Styling requirements (Tailwind + DaisyUI)
+
+This library currently relies on utility and component classes from **Tailwind CSS 4** and **DaisyUI 5** (for example `btn`, `btn-primary`, `input`, `drawer`, `modal`).
+
+If your app does not include these plugins, components will still render, but visual styles will be incomplete.
+
+Minimum setup in consumer app styles:
+
+```css
+@import 'tailwindcss';
+@plugin 'daisyui';
+```
+
 ## Quick README navigation
 
 - [Project positioning](#project-positioning)
