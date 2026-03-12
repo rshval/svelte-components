@@ -5,6 +5,7 @@
 	import type { Component } from 'svelte';
 	import Loader from '$lib/components/Loader.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import { validateFileByRules } from '$lib/helpers/file-validation.js';
 
 	let {
 		children,
@@ -17,6 +18,9 @@
 		filterKey,
 		onloading,
 		onload,
+		maxFileSizeMb,
+		validateFile,
+		onerror,
 		...props
 	}: {
 		children?: Snippet;
@@ -29,6 +33,9 @@
 		assetsPost?: string;
 		onloading?: any;
 		onload?: any;
+		maxFileSizeMb?: number;
+		validateFile?: (file: File) => string | null;
+		onerror?: (message: string, context?: { fileName?: string; code?: string }) => void;
 	} = $props();
 
 	let elemFileInput: HTMLElement;
@@ -45,6 +52,11 @@
 		let filesReadArr: object[] = [];
 		if (files?.length) {
 			for (const file of files) {
+				const validationError = validateFileByRules(file, { accept, maxFileSizeMb, validateFile });
+				if (validationError) {
+					onerror?.(validationError.message, { fileName: file.name, code: validationError.code });
+					continue;
+				}
 				filesReadArr = [{ file: file }, ...filesReadArr];
 			}
 			filteredFiles = [...filesReadArr];
