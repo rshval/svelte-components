@@ -11,6 +11,11 @@
 	import IconPhotoStar from '@tabler/icons-svelte-runes/icons/photo-star';
 	import IconCircleX from '@tabler/icons-svelte-runes/icons/circle-x';
 
+	interface UploadErrorContext {
+		fileName?: string;
+		code?: string;
+	}
+
 	let {
 		src,
 		assetsPost,
@@ -22,7 +27,8 @@
 		onmain,
 		oncancel,
 		onremove,
-		onload
+		onload,
+		onerror
 	}: {
 		src?: string;
 		path?: string;
@@ -36,26 +42,54 @@
 		oncancel: any;
 		onremove: any;
 		onload: any;
+		onerror?: (message: string, context?: UploadErrorContext) => void;
 	} = $props();
 
 	let imgPath: string | null = $state(null);
-
 	let fileSrc: string | null = $state(null);
 	let isLoading = $state(false);
 
+	function emitUploadError(message: string, context?: UploadErrorContext) {
+		onerror?.(message, {
+			...context,
+			fileName: context?.fileName || (file instanceof File ? file.name : undefined)
+		});
+	}
+
+	function resolveUploadError(response: any): { message: string; code?: string } {
+		const message =
+			response?.message ||
+			response?.error?.message ||
+			response?.error ||
+			'Failed to upload image. Please try again.';
+		const code =
+			response?.code ||
+			response?.error?.code ||
+			(response?.success === false ? 'UPLOAD_FAILED' : undefined);
+
+		return { message, code };
+	}
+
 	$effect(() => {
 		if (file) {
-			let reader = new FileReader();
+			const reader = new FileReader();
 			if (isNew) {
 				isLoading = true;
 				reader.onload = async (e: ProgressEvent<FileReader>) => {
 					if (typeof e.target?.result === 'string') {
-						fileSrc = e.target?.result;
-						const formData = new FormData();
-						formData.set('image', file);
-						const response = await api.post(assetsPost, formData);
-						if (response?.image) {
-							onload?.(response);
+						fileSrc = e.target.result;
+						try {
+							const formData = new FormData();
+							formData.set('image', file);
+							const response = await api.post(assetsPost, formData);
+							if (response?.image) {
+								onload?.(response);
+							} else {
+								const uploadError = resolveUploadError(response);
+								emitUploadError(uploadError.message, { code: uploadError.code });
+							}
+						} catch {
+							emitUploadError('Network error while uploading image.', { code: 'NETWORK_ERROR' });
 						}
 					}
 					isLoading = false;
@@ -64,7 +98,7 @@
 			} else {
 				reader.onload = (e: ProgressEvent<FileReader>) => {
 					if (typeof e.target?.result === 'string') {
-						fileSrc = e.target?.result;
+						fileSrc = e.target.result;
 					}
 				};
 				reader.readAsDataURL(file);

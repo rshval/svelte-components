@@ -5,6 +5,18 @@
 	import { tick } from 'svelte';
 	import delay from 'delay';
 	import Loader from '$lib/components/Loader.svelte';
+	import {
+		DEFAULT_IMAGE_ACCEPT,
+		FILE_VALIDATION_ERROR_MESSAGES,
+		FILE_VALIDATION_ERROR_CODES,
+		normalizeAccept,
+		validateFileByRules
+	} from '$lib/helpers/file-validation.js';
+
+	interface UploadErrorContext {
+		fileName?: string;
+		code?: string;
+	}
 
 	let {
 		multiple = false,
@@ -15,26 +27,49 @@
 		paths = $bindable([]),
 		ids = $bindable([]),
 		class: className,
-		limit = 10
+		limit = 10,
+		accept = [...DEFAULT_IMAGE_ACCEPT],
+		maxFileSizeMb,
+		validateFile,
+		onerror
 	}: {
 		multiple?: boolean;
 		disabled?: boolean;
 		assetsGet: string;
 		assetsPost: string;
 		pathPrefix: string;
-		paths?: string[]; // url файлов для отображения
-		ids?: string[]; //id объектов для обновления
+		paths?: string[];
+		ids?: string[];
 		class?: any;
 		limit?: number;
+		accept?: string | string[];
+		maxFileSizeMb?: number;
+		validateFile?: (file: File) => string | null;
+		onerror?: (message: string, context?: UploadErrorContext) => void;
 	} = $props();
 
 	let fileinputElem: HTMLInputElement;
 	let files: FileList | undefined = $state();
+	const resolvedAccept = $derived(normalizeAccept(accept));
+	const acceptAttribute = $derived(resolvedAccept.join(', '));
 
 	interface FList {
+		id: string;
 		path?: string;
 		file?: File;
 		new?: boolean;
+	}
+
+	function createQueueItem(file: File): FList {
+		return {
+			id: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2, 9)}`,
+			file,
+			new: true
+		};
+	}
+
+	function emitError(message: string, context?: UploadErrorContext) {
+		onerror?.(message, context);
 	}
 
 	$effect(() => {
@@ -44,27 +79,34 @@
 	let filteredFiles: FList[] = $state([]);
 	function onReadFiles() {
 		selectedIndex = null;
-		let filesReadArr: FList[] = [];
+		const filesReadArr: FList[] = [];
 		if (files?.length) {
 			for (const file of files) {
-				filesReadArr = [{ file: file, new: true }, ...filesReadArr];
+				const validationError = validateFileByRules(file, { accept, maxFileSizeMb, validateFile });
+				if (validationError) {
+					const message =
+						validationError.code === FILE_VALIDATION_ERROR_CODES.UNSUPPORTED_FORMAT
+							? `${FILE_VALIDATION_ERROR_MESSAGES.UNSUPPORTED_FORMAT} Allowed: ${resolvedAccept.join(', ')}.`
+							: validationError.message;
+					emitError(message, { fileName: file.name, code: validationError.code });
+					continue;
+				}
+				filesReadArr.unshift(createQueueItem(file));
 			}
-			filteredFiles = [...filesReadArr];
+			filteredFiles = filesReadArr;
 		}
 		if (fileinputElem?.value) fileinputElem.value = '';
 	}
 
 	let filteredList: FList[] | undefined = $state([]);
 	$effect(() => {
-		if (updatedPaths || !updatedPaths) {
-			let list = [
-				...(paths?.map((i: string) => {
-					return { path: i };
-				}) || []),
-				...filteredFiles
-			];
-			filteredList = list.length ? list : []; //list.sort((a, b) => a.main)
-		}
+		let list = [
+			...(paths?.map((i: string, index: number) => {
+				return { id: `uploaded-${i}-${index}`, path: i };
+			}) || []),
+			...filteredFiles
+		];
+		filteredList = list.length ? list : [];
 	});
 
 	let selectedItem: FList | null;
@@ -81,13 +123,10 @@
 	let listElem = null;
 	let isVisible = $state(true);
 
-	let updatedPaths = $state(false);
 	async function onMain(item: FList, index: number) {
-		updatedPaths = false;
 		isVisible = false;
 		[paths[index], paths[0]] = [paths[0], paths[index]];
 		[ids[index], ids[0]] = [ids[0], ids[index]];
-		updatedPaths = true;
 		await tick();
 		onCancel(item, index);
 		isVisible = true;
@@ -113,17 +152,29 @@
 
 	async function onLoad(
 		item: FList,
-		response: { image: { path: string; destination: string; _id: string } } // main: boolean
+		response: { image: { path: string; destination: string; _id: string } }
 	) {
-		if (response?.image) {
-			item.new = false;
-			isVisible = false;
-			paths = [...paths, ...[response.image.path.replace(response.image.destination, '')]];
-			ids = [...ids, ...[response.image._id]];
-			await tick();
-			isVisible = true;
+		if (!response?.image) {
+			return;
 		}
+
+		item.new = false;
+		isVisible = false;
+		paths = [...paths, ...[response.image.path.replace(response.image.destination, '')]];
+		ids = [...ids, ...[response.image._id]];
+		await tick();
+		isVisible = true;
 	}
+
+	async function onUploadError(item: FList, message: string, context?: UploadErrorContext) {
+		filteredFiles = filteredFiles.filter((currentItem) => currentItem.id !== item.id);
+		if (selectedItem?.id === item.id) {
+			selectedItem = null;
+			selectedIndex = null;
+		}
+		emitError(message, context);
+	}
+
 	function onCancel(item: FList, index: number) {
 		if (selectedItem?.path === item.path) {
 			selectedItem = null;
@@ -161,7 +212,7 @@
 	</div>
 	<div class="list" bind:this={listElem} role="none">
 		{#if isVisible && filteredList}
-			{#each filteredList as item, i}
+			{#each filteredList as item, i (item.id)}
 				{#if item.new !== false}
 					<div
 						class="file rounded-xl"
@@ -173,6 +224,11 @@
 							onmain={() => onMain(item, i)}
 							onremove={() => onRemove(item, i)}
 							onload={(response: any) => onLoad(item, response)}
+							onerror={(message: string, context?: UploadErrorContext) =>
+								onUploadError(item, message, {
+									...context,
+									fileName: context?.fileName || item.file?.name
+								})}
 							oncancel={() => onCancel(item, i)}
 							{assetsPost}
 							path={item.path
@@ -195,7 +251,7 @@
 	style="display:none"
 	type="file"
 	{multiple}
-	accept="image/png, image/jpeg"
+	accept={acceptAttribute}
 	bind:files
 	disabled={disabled || isLimited || isDisabled}
 	name="photo"

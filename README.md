@@ -100,11 +100,11 @@ Use-case: confirmations, forms, and content cards with user actions.
 
 #### Props / Events / Bindings
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                                                                         |
+| -------- | ---------------------------------------------------------------------------------------------- |
 | Props    | `title`, `noActions`, `btnDisabled`, `classBox`, `class`, `styleBox`, `noAutoClose`, `btnText` |
-| Events   | `onclose` |
-| Bindings | `bind:element`, `bind:send` |
+| Events   | `onclose`                                                                                      |
+| Bindings | `bind:element`, `bind:send`                                                                    |
 
 #### Basic example
 
@@ -149,11 +149,11 @@ Use-case: quick notifications for successful/error actions.
 
 #### Props / Events / Bindings
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields           |
+| -------- | ---------------- |
 | Props    | `items`, `class` |
-| Events   | `onclose(item)` |
-| Bindings | none |
+| Events   | `onclose(item)`  |
+| Bindings | none             |
 
 #### Input variants
 
@@ -190,10 +190,7 @@ Use-case: quick notifications for successful/error actions.
 </script>
 
 {#if toast}
-	<Toast
-		items={[{ type: toast.type, message: toast.message }]}
-		onclose={() => (toast = null)}
-	/>
+	<Toast items={[{ type: toast.type, message: toast.message }]} onclose={() => (toast = null)} />
 {/if}
 ```
 
@@ -205,27 +202,27 @@ Use-case: list pages (orders/events/customers) with filters and pagination.
 
 #### Table
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                                                 |
+| -------- | ---------------------------------------------------------------------- |
 | Props    | `columns`, `rows`, `hover`, `zebra`, `class`, `selected`, `ths`, `trs` |
-| Events   | none (row selection is done via `selected`) |
-| Bindings | `bind:rows`, `bind:columns`, `bind:selected` |
+| Events   | none (row selection is done via `selected`)                            |
+| Bindings | `bind:rows`, `bind:columns`, `bind:selected`                           |
 
 #### TableFilters
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                 |
+| -------- | -------------------------------------- |
 | Props    | `title`, `count`, `bodyClass`, `class` |
-| Events   | none |
-| Snippets | `#snippet actions()` + children |
+| Events   | none                                   |
+| Snippets | `#snippet actions()` + children        |
 
 #### TablePagination
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                                                                                                                            |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Props    | `total`, `page`, `limit`, `limitOptions`, `onPrev`, `onNext`, `onLimitChange`, `canPrev`, `canNext`, `summary`, `pageLabel`, `showLimit`, `class` |
-| Events   | callback props |
-| Bindings | none |
+| Events   | callback props                                                                                                                                    |
+| Bindings | none                                                                                                                                              |
 
 #### End-to-end example
 
@@ -354,11 +351,11 @@ How it works:
 
 Use-case: text inputs and password fields with toggle.
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                                                                                                                              |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Props    | `value`, `label`, `type`, `passwordToggle`, `class`, `id` + HTML attributes (`placeholder`, `autocomplete`, `name`, `spellcheck`, `maxlength` etc.) |
-| Events   | `oninput`, `onchange`, `onfocus` |
-| Bindings | `bind:value` |
+| Events   | `oninput`, `onchange`, `onfocus`                                                                                                                    |
+| Bindings | `bind:value`                                                                                                                                        |
 
 ```svelte
 <InputField bind:value={title} placeholder="Title" />
@@ -374,11 +371,11 @@ Use-case: text inputs and password fields with toggle.
 
 Use-case: phone input with country selector.
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                                                                  |
+| -------- | --------------------------------------------------------------------------------------- |
 | Props    | `value`, `inputId`, `inputClass`, `placeholder`, `disabledCountry`, `disabled`, `class` |
-| Events   | `onInput` |
-| Bindings | `bind:value`, `bind:country`, `bind:valid`, `bind:element` |
+| Events   | `onInput`                                                                               |
+| Bindings | `bind:value`, `bind:country`, `bind:valid`, `bind:element`                              |
 
 ```svelte
 <InputPhone
@@ -392,11 +389,11 @@ Use-case: phone input with country selector.
 
 Use-case: binary flags in filters/settings.
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                      |
+| -------- | ------------------------------------------- |
 | Props    | `checked`, `styleType`, `class`, `disabled` |
-| Events   | `onchange` |
-| Bindings | `bind:checked` |
+| Events   | `onchange`                                  |
+| Bindings | `bind:checked`                              |
 
 ```svelte
 <Switch styleType="warning" bind:checked={isPrivate} />
@@ -413,11 +410,11 @@ Use-case: binary flags in filters/settings.
 
 Use-case: selecting a value from options.
 
-| Type      | Fields |
-| --- | --- |
+| Type     | Fields                                                                                               |
+| -------- | ---------------------------------------------------------------------------------------------------- |
 | Props    | `value`, `options: Array<{ value; label }>`, `label`, `placeholder`, `disabled`, `required`, `class` |
-| Events   | via standard `<select>` `onchange` |
-| Bindings | `bind:value` |
+| Events   | via standard `<select>` `onchange`                                                                   |
+| Bindings | `bind:value`                                                                                         |
 
 ```svelte
 <Select
@@ -505,11 +502,8 @@ Export: `clickOutside`.
 	let isOpen = $state(true);
 </script>
 
-<div use:clickOutside={() => (isOpen = false)}>
-	...
-</div>
+<div use:clickOutside={() => (isOpen = false)}>...</div>
 ```
-
 
 ### Coverage of commonly used entities
 
@@ -562,6 +556,50 @@ Main export groups from `src/lib/index.ts`:
 - Plugins: `api`, `geoserviceApi`, `storageGet/storageSet/storageRemove`;
 - Stores: `accountStore`, `sessionStore`, `networkStore`, `deviceInfoStore`, `geolocationStore`, `screenOrientationStore`, `noScrollAppStore`.
 
+## ImagesUploader
+
+`ImagesUploader` now validates files on the client before upload starts.
+
+- Default supported formats: `image/png`, `image/jpeg` (`.png`, `.jpg`, `.jpeg`).
+- Invalid files are rejected before preview/upload.
+- Upload errors are returned through `onerror`.
+
+### Props
+
+- `accept?: string | string[]` - accepted file formats (default: `['image/png', 'image/jpeg']`).
+- `maxFileSizeMb?: number` - optional max file size in MB.
+- `validateFile?: (file: File) => string | null` - custom validator, returns error text or `null`.
+- `onerror?: (message: string, context?: { fileName?: string; code?: string }) => void` - unified error callback for client/server upload errors.
+
+### Toast integration example
+
+```svelte
+<script lang="ts">
+	import { ImagesUploader, Toast } from '@rshval/svelte-components';
+
+	let toastItems = $state([]);
+
+	function handleUploadError(message: string, context?: { fileName?: string }) {
+		toastItems = [
+			...toastItems,
+			{
+				type: 'error',
+				message: context?.fileName ? `${context.fileName}: ${message}` : message
+			}
+		];
+	}
+</script>
+
+<ImagesUploader
+	assetsGet="/api/assets"
+	assetsPost="/api/assets"
+	pathPrefix=""
+	onerror={handleUploadError}
+/>
+
+<Toast items={toastItems} />
+```
+
 ## Development scripts
 
 ```bash
@@ -610,12 +648,12 @@ Automated release via Changesets:
 
 ## Compatibility
 
-| Package                              | Recommended version |
-| ----------------------------------- | -------------------- |
-| `svelte` (peer)                     | `^5.53.7`            |
-| `@sveltejs/kit` (optional, for SvelteKit apps) | `^2.53.4` |
-| `@tiptap/core` and `@tiptap/*` (peer) | `^3.20.0`          |
-| `@popperjs/core` (runtime)          | `^2.11.8`            |
+| Package                                        | Recommended version |
+| ---------------------------------------------- | ------------------- |
+| `svelte` (peer)                                | `^5.53.7`           |
+| `@sveltejs/kit` (optional, for SvelteKit apps) | `^2.53.4`           |
+| `@tiptap/core` and `@tiptap/*` (peer)          | `^3.20.0`           |
+| `@popperjs/core` (runtime)                     | `^2.11.8`           |
 
 ## SSR limitations and notes
 
