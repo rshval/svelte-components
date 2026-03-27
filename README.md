@@ -7,7 +7,7 @@ Package includes:
 - base UI components (`Button`, `InputField`, `Select`, `Modal`, `Toast`, `Alert`);
 - composite components (`Table`, `InputPhone`, `Drawer`, `Notifications`);
 - map components built on `mapbox-gl`;
-- helpers and plugins (`api`, `geoserviceApi`, `storage*`);
+- helpers and plugins (`api`, `geoserviceApi`, `storage*`, `createApiClient`, `createSocketClient`);
 - ready-to-use Svelte stores for session, account, network, geolocation, and device info.
 
 ## Project positioning
@@ -554,7 +554,36 @@ Main export groups from `src/lib/index.ts`:
 - Map: `Map`, `MapComponent`, `UiMap*`, `getGeolocation`, mapbox event types;
 - Helpers: `clickOutside`, `blurOnEscape`, `isValid*`, `patternPassword`, `getColorByValue`, `isObject`;
 - Plugins: `api`, `geoserviceApi`, `storageGet/storageSet/storageRemove`;
+- Network transport package: `createApiClient`, `createSocketClient` and typed event/env helpers from `@rshval/svelte-components/network` (also re-exported from root package);
 - Stores: `accountStore`, `sessionStore`, `networkStore`, `deviceInfoStore`, `geolocationStore`, `screenOrientationStore`, `noScrollAppStore`.
+
+### `@rshval/svelte-components/network`
+
+Lightweight transport primitives without product/business logic:
+
+- `createApiClient` — fetch-based HTTP client with typed responses and optional auth token resolver.
+- `createSocketClient` — typed websocket client with strongly typed inbound/outbound events.
+- env-driven config via `baseUrlEnvKey` / `urlEnvKey` (`import.meta.env`, `process.env`, or explicit `env` object).
+
+```ts
+import { createApiClient, createSocketClient } from '@rshval/svelte-components/network';
+
+const api = createApiClient({
+	baseUrlEnvKey: 'PUBLIC_API_URL'
+});
+
+type IncomingEvents = {
+	chat_message: { id: string; text: string };
+};
+
+type OutgoingEvents = {
+	send_message: { text: string };
+};
+
+const socket = createSocketClient<IncomingEvents, OutgoingEvents>({
+	urlEnvKey: 'PUBLIC_WS_URL'
+});
+```
 
 ## ImagesUploader
 
