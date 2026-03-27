@@ -71,6 +71,18 @@ export { getColorByValue, isObject } from './helpers/functions.js';
 export { default as api } from './plugins/api.js';
 export { default as geoserviceApi } from './plugins/geoservice-api.js';
 export { storageGet, storageSet, storageRemove } from './plugins/storage.js';
+export {
+	createApiClient,
+	createSocketClient,
+	type ApiClient,
+	type ApiClientOptions,
+	type ApiRequestOptions,
+	type EnvLike,
+	type EventMap,
+	type SocketClient,
+	type SocketClientOptions,
+	type SocketEnvelope
+} from './network/index.js';
 
 export { accountStore, accountStoreInited } from './stores/user/account.store.js';
 export { sessionStore, sessionIsInited } from './stores/user/session.store.js';

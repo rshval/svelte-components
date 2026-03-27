@@ -11,7 +11,9 @@ const requiredDistFiles = [
 	'dist/stores/index.js',
 	'dist/stores/index.d.ts',
 	'dist/constants.js',
-	'dist/constants.d.ts'
+	'dist/constants.d.ts',
+	'dist/network/index.js',
+	'dist/network/index.d.ts'
 ];
 
 const missing = [];
