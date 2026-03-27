@@ -10,3 +10,9 @@ export {
 	type SocketClientOptions
 } from './create-socket-client.js';
 export type { EnvLike, EventMap, HttpMethod, MaybePromise, SocketEnvelope } from './types.js';
+
+export {
+	createSocketIoConnectionConfig,
+	type CreateSocketIoConnectionConfigOptions,
+	type SocketIoConnectionConfig
+} from './socket-io.js';

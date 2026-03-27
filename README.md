@@ -7,7 +7,7 @@ Package includes:
 - base UI components (`Button`, `InputField`, `Select`, `Modal`, `Toast`, `Alert`);
 - composite components (`Table`, `InputPhone`, `Drawer`, `Notifications`);
 - map components built on `mapbox-gl`;
-- helpers and plugins (`api`, `geoserviceApi`, `storage*`, `createApiClient`, `createSocketClient`);
+- helpers and plugins (`api`, `geoserviceApi`, `storage*`, `createApiClient`, `createSocketClient`, `createSocketIoConnectionConfig`);
 - ready-to-use Svelte stores for session, account, network, geolocation, and device info.
 
 ## Project positioning
@@ -554,7 +554,7 @@ Main export groups from `src/lib/index.ts`:
 - Map: `Map`, `MapComponent`, `UiMap*`, `getGeolocation`, mapbox event types;
 - Helpers: `clickOutside`, `blurOnEscape`, `isValid*`, `patternPassword`, `getColorByValue`, `isObject`;
 - Plugins: `api`, `geoserviceApi`, `storageGet/storageSet/storageRemove`;
-- Network transport package: `createApiClient`, `createSocketClient` and typed event/env helpers from `@rshval/svelte-components/network` (also re-exported from root package);
+- Network transport package: `createApiClient`, `createSocketClient`, `createSocketIoConnectionConfig` and typed event/env helpers from `@rshval/svelte-components/network` (also re-exported from root package);
 - Stores: `accountStore`, `sessionStore`, `networkStore`, `deviceInfoStore`, `geolocationStore`, `screenOrientationStore`, `noScrollAppStore`.
 
 ### `@rshval/svelte-components/network`
@@ -563,14 +563,26 @@ Lightweight transport primitives without product/business logic:
 
 - `createApiClient` — fetch-based HTTP client with typed responses and optional auth token resolver.
 - `createSocketClient` — typed websocket client with strongly typed inbound/outbound events.
+- `createSocketIoConnectionConfig` — env adapter for Socket.IO web client connection config (`withCredentials`, `transports`).
 - env-driven config via `baseUrlEnvKey` / `urlEnvKey` (`import.meta.env`, `process.env`, or explicit `env` object).
 
 ```ts
-import { createApiClient, createSocketClient } from '@rshval/svelte-components/network';
+import {
+	createApiClient,
+	createSocketClient,
+	createSocketIoConnectionConfig
+} from '@rshval/svelte-components/network';
 
 const api = createApiClient({
 	baseUrlEnvKey: 'PUBLIC_API_URL'
 });
+
+const socketIoConfig = createSocketIoConnectionConfig(import.meta.env, {
+	isProduction: import.meta.env.PROD
+});
+
+// Example with socket.io-client:
+// io(import.meta.env.VITE_SOCKET_URL, socketIoConfig);
 
 type IncomingEvents = {
 	chat_message: { id: string; text: string };
@@ -582,6 +594,17 @@ type OutgoingEvents = {
 
 const socket = createSocketClient<IncomingEvents, OutgoingEvents>({
 	urlEnvKey: 'PUBLIC_WS_URL'
+});
+```
+
+`VITE_SOCKET_WITH_CREDENTIALS` accepts boolean-like values (`true/false/1/0/on/off/yes/no`).
+`VITE_SOCKET_TRANSPORTS` accepts a comma-separated list with validated values: `websocket`, `polling`, `webtransport`.
+
+```ts
+import { createSocketIoConnectionConfig } from '@rshval/svelte-components/network/socket-io';
+
+const config = createSocketIoConnectionConfig(import.meta.env, {
+	isProduction: import.meta.env.PROD
 });
 ```
 
