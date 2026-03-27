@@ -57,6 +57,10 @@
 		"./network": {
 			"types": "./dist/network/index.d.ts",
 			"default": "./dist/network/index.js"
+		},
+		"./network/socket-io": {
+			"types": "./dist/network/socket-io.d.ts",
+			"default": "./dist/network/socket-io.js"
 		}
 	},
 	"peerDependencies": {
@@ -130,7 +134,8 @@
 		"esm-env": "^1.2.2",
 		"libphonenumber-js": "^1.12.38",
 		"mapbox-gl": "^3.19.1",
-		"uniqolor": "^1.1.1"
+		"uniqolor": "^1.1.1",
+		"socket.io-client": "^4.8.1"
 	},
 	"keywords": [
 		"svelte",

@@ -74,6 +74,7 @@ export { storageGet, storageSet, storageRemove } from './plugins/storage.js';
 export {
 	createApiClient,
 	createSocketClient,
+	createSocketIoConnectionConfig,
 	type ApiClient,
 	type ApiClientOptions,
 	type ApiRequestOptions,
@@ -81,7 +82,9 @@ export {
 	type EventMap,
 	type SocketClient,
 	type SocketClientOptions,
-	type SocketEnvelope
+	type SocketEnvelope,
+	type CreateSocketIoConnectionConfigOptions,
+	type SocketIoConnectionConfig
 } from './network/index.js';
 
 export { accountStore, accountStoreInited } from './stores/user/account.store.js';
