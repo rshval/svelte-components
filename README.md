@@ -104,7 +104,27 @@ Use-case: confirmations, forms, and content cards with user actions.
 | -------- | ---------------------------------------------------------------------------------------------- |
 | Props    | `title`, `noActions`, `btnDisabled`, `classBox`, `class`, `styleBox`, `noAutoClose`, `btnText` |
 | Events   | `onclose`                                                                                      |
-| Bindings | `bind:element`, `bind:send`                                                                    |
+| Bindings | `bind:element`, `bind:send`, `bind:opened`                                                     |
+| Snippets | `children`, `buttons`                                                                          |
+| Slots (legacy) | default, `buttons`                                                                    |
+
+#### Bindable vs readonly contract
+
+For `Modal`, use a strict split:
+
+- **Bindable**: `element`, `send`, `opened` (consumer can bind/manage mutable state and callbacks).
+- **Readonly**: `title`, `btnText`, `noActions`, `noAutoClose`, `class`, `classBox`, `styleBox`, `children`, `buttons`.
+
+Decision matrix:
+
+| Scenario | Use bindable | Use readonly |
+| --- | --- | --- |
+| Parent needs to call `showModal()` / `close()` | `bind:element` | `title`, content snippets/slots |
+| Parent replaces submit handler dynamically | `bind:send` | static labels and styles |
+| Parent controls open/close via state | `bind:opened` | title/content/action styling |
+| Static informational modal | no | readonly props only |
+
+Compatibility note: if `opened` is not bound, `Modal` keeps legacy behavior and does not force-close dialog instances opened through `bind:element` + `showModal()`.
 
 #### Basic example
 
@@ -142,6 +162,53 @@ Use-case: confirmations, forms, and content cards with user actions.
 	</div>
 </Modal>
 ```
+
+#### Bindable open state (controlled)
+
+```svelte
+<script lang="ts">
+	import { Modal, Button } from '@rshval/svelte-components';
+
+	let modalElem: HTMLDialogElement | null = null;
+	let opened = $state(false);
+</script>
+
+<Button onclick={() => (opened = true)}>Open</Button>
+
+<Modal bind:element={modalElem} bind:opened title="Controlled modal" noActions>
+	<div class="p-4">
+		Controlled from parent state.
+		<div class="mt-4">
+			<Button class="btn-ghost" onclick={() => (opened = false)}>Close</Button>
+		</div>
+	</div>
+</Modal>
+```
+
+#### Runes-ready snippet API (recommended)
+
+```svelte
+<Modal bind:element={modalElem} title="Snippet modal">
+	{#snippet children()}
+		<div class="p-4">Snippet content</div>
+	{/snippet}
+
+	{#snippet buttons()}
+		<button class="btn btn-primary" onclick={() => modalElem?.close()}>Confirm</button>
+	{/snippet}
+</Modal>
+```
+
+#### Legacy slots compatibility (migration-safe)
+
+```svelte
+<Modal bind:element={modalElem} title="Legacy modal">
+	<div class="p-4">Legacy content</div>
+	<button slot="buttons" class="btn btn-primary">Legacy action</button>
+</Modal>
+```
+
+`Modal` supports both snippet and legacy slot composition in the current release line. Prefer snippets for new code; keep slots while migrating existing pages.
 
 ### Toast
 
@@ -215,6 +282,9 @@ Use-case: list pages (orders/events/customers) with filters and pagination.
 | Props    | `title`, `count`, `bodyClass`, `class` |
 | Events   | none                                   |
 | Snippets | `#snippet actions()` + children        |
+| Slots (legacy) | `slot="actions"` + default slot |
+
+Readonly props contract: `TableFiltersProps`.
 
 #### TablePagination
 
@@ -308,6 +378,17 @@ Use-case: list pages (orders/events/customers) with filters and pagination.
 />
 ```
 
+#### Legacy slots compatible example
+
+```svelte
+<TableFilters title="Filters" count={rows.length} bodyClass="grid grid-cols-1 gap-3 md:grid-cols-4">
+	<Button slot="actions" class="btn-ghost btn-sm" onclick={resetFilters}>Reset</Button>
+
+	<input class="input-bordered input input-sm" placeholder="Search" />
+	<Button class="btn-sm btn-primary" onclick={load}>Apply</Button>
+</TableFilters>
+```
+
 #### Example action-cell component (`ActionButtons.svelte`)
 
 ```svelte
@@ -356,6 +437,11 @@ Use-case: text inputs and password fields with toggle.
 | Props    | `value`, `label`, `type`, `passwordToggle`, `class`, `id` + HTML attributes (`placeholder`, `autocomplete`, `name`, `spellcheck`, `maxlength` etc.) |
 | Events   | `oninput`, `onchange`, `onfocus`                                                                                                                    |
 | Bindings | `bind:value`                                                                                                                                        |
+
+Bindable vs readonly split:
+
+- **Bindable**: `value`.
+- **Readonly**: `label`, `type`, `passwordToggle`, `class`, `id` and other native input attributes.
 
 ```svelte
 <InputField bind:value={title} placeholder="Title" />
