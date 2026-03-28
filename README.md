@@ -410,6 +410,8 @@ Readonly props contract: `TableFiltersProps`.
 </TableFilters>
 ```
 
+`TableFilters` internals are snippet/render-only in current releases. Legacy slot syntax can still be migrated gradually, but snippet syntax is the recommended target.
+
 #### Example action-cell component (`ActionButtons.svelte`)
 
 ```svelte

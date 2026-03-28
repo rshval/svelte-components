@@ -40,9 +40,8 @@
 				BubbleMenu.configure({
 					element: bubbleMenu,
 					shouldShow: ({ state }) => !state.selection.empty,
-					tippyOptions: {
-						duration: 0,
-						offset: [0, 10],
+					options: {
+						offset: 10,
 						onShow: () => {
 							showBubble = true;
 						},

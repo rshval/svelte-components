@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.3.4 - 2026-03-28
+
+### Fixed
+
+- Updated `Editor` bubble menu config to use `options` (current TipTap API) instead of deprecated `tippyOptions`.
+- Fixed TypeScript narrowing in `create-socket-client.spec.ts` for websocket mock assertions.
+
 ## 1.3.3 - 2026-03-28
 
 ### Fixed

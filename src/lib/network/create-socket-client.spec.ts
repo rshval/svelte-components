@@ -56,17 +56,18 @@ describe('createSocketClient', () => {
 		client.on('connected', listener);
 
 		const socket = client.connect();
-		expect((socket as unknown as MockWebSocket).url).toBe('wss://socket.example.com');
+		const ws = socket as unknown as MockWebSocket;
+		expect(ws.url).toBe('wss://socket.example.com');
 
-		wsInstance?.open();
+		ws.open();
 		client.emit('ping', { at: 10 });
-		expect(wsInstance?.sent[0]).toBe('{"type":"ping","payload":{"at":10}}');
+		expect(ws.sent[0]).toBe('{"type":"ping","payload":{"at":10}}');
 
-		wsInstance?.emitMessage('{"type":"connected","payload":{"id":"u1"}}');
+		ws.emitMessage('{"type":"connected","payload":{"id":"u1"}}');
 		expect(listener).toHaveBeenCalledWith({ id: 'u1' });
 		expect(client.isConnected()).toBe(true);
 
 		client.disconnect();
-		expect(wsInstance?.readyState).toBe(MockWebSocket.CLOSED);
+		expect(ws.readyState).toBe(MockWebSocket.CLOSED);
 	});
 });
