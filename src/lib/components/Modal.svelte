@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import { clickOutside } from '$lib/helpers/events.js';
 	import { createId } from '$lib/helpers/id.js';
+	import type { ModalProps } from './Modal.types.js';
 
 	let {
 		children,
@@ -12,6 +12,8 @@
 		btnDisabled,
 		element = $bindable(),
 		send = $bindable(),
+		opened = $bindable(),
+		onclose: onCloseProp,
 		noActions = false,
 		noAutoClose = false,
 		class: className,
@@ -19,32 +21,38 @@
 		styleBox,
 		id,
 		...props
-	}: {
-		children?: Snippet;
-		buttons?: Snippet;
-		title?: string;
-		flex?: boolean;
-		btnDisabled?: boolean;
-		element?: HTMLDialogElement | undefined;
-		send?: any;
-		onclose?: any;
-		btnText?: string;
-		noActions?: boolean;
-		noAutoClose?: boolean;
-		class?: any;
-		classBox?: any;
-		styleBox?: any;
-		id?: string;
-	} = $props();
+	}: ModalProps = $props();
 
 	function onClose(e: Event) {
 		if (element?.open) {
 			if (!noAutoClose) {
 				element?.close();
+			} else {
+				onCloseProp?.(e);
 			}
-			props.onclose?.(e);
 		}
 	}
+
+	function handleNativeClose(e: Event) {
+		if (opened !== undefined) {
+			opened = false;
+		}
+		onCloseProp?.(e);
+	}
+
+	$effect(() => {
+		if (!element || !element.isConnected) return;
+		if (opened === undefined) return;
+
+		if (opened && !element.open) {
+			element.showModal();
+		}
+
+		if (!opened && element.open) {
+			element.close();
+		}
+	});
+
 	const generatedDialogId = createId('dialog');
 	const dialogId = $derived(id ?? generatedDialogId);
 </script>
@@ -52,6 +60,7 @@
 <dialog
 	id={dialogId}
 	bind:this={element}
+	onclose={handleNativeClose}
 	class={['modal', 'modal-bottom', 'sm:modal-middle' , 'overflow-hidden', className]}
 	{...props}
 >
@@ -66,7 +75,11 @@
 			<h3 class="text-lg font-bold">{title}</h3>
 		{/if}
 
-		{@render children?.()}
+		{#if children}
+			{@render children?.()}
+		{:else}
+			<slot />
+		{/if}
 
 		{#if !noActions}
 			<div class="modal-action">
@@ -74,9 +87,11 @@
 					{#if buttons}
 						{@render buttons?.()}
 					{:else}
-						<button class="btn" disabled={btnDisabled} onclick={send}
-							>{btnText ? btnText : 'Отправить'}</button
-						>
+						<slot name="buttons">
+							<button class="btn" disabled={btnDisabled} onclick={send}
+								>{btnText ? btnText : 'Отправить'}</button
+							>
+						</slot>
 					{/if}
 				</form>
 			</div>

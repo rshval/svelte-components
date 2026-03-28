@@ -1,11 +1,21 @@
 export { default as Button } from './components/Button.svelte';
 export { default as Badge } from './components/Badge.svelte';
 export { default as InputField } from './components/input/InputField.svelte';
+export type {
+	InputFieldProps,
+	InputFieldBindableProps,
+	InputFieldReadonlyProps
+} from './components/input/InputField.types.js';
 export { default as Textarea } from './components/input/Textarea.svelte';
 export { default as Editor } from './components/input/Editor.svelte';
 export { default as Select } from './components/Select.svelte';
 export { default as Loader } from './components/Loader.svelte';
 export { default as Modal } from './components/Modal.svelte';
+export type {
+	ModalProps,
+	ModalReadonlyProps,
+	ModalBindableProps
+} from './components/Modal.types.js';
 export { default as Switch } from './components/Switch.svelte';
 export { default as Alert } from './components/Alert.svelte';
 export { default as Popup } from './components/Popup.svelte';
@@ -26,7 +36,13 @@ export type {
 export { InputPhone, type E164Number } from './components/input/phone/index.js';
 export { default as Notifications } from './components/notifications/Notifications.svelte';
 export { default as Notification } from './components/notifications/Notification.svelte';
-export { Table, TableFilters, TablePagination, type ColumnType } from './components/table/index.js';
+export {
+	Table,
+	TableFilters,
+	TablePagination,
+	type ColumnType,
+	type TableFiltersProps
+} from './components/table/index.js';
 export { Theme, ThemeButton, darkModeStore } from './components/theme/index.js';
 export { dragscroll, type DragScrollParameters } from '@svelte-put/dragscroll';
 

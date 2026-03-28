@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Snippet } from 'svelte';
+	import type { TableFiltersProps } from './TableFilters.types.js';
 
 	let {
 		title = 'Фильтры',
@@ -8,14 +8,7 @@
 		bodyClass = 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5',
 		actions,
 		children
-	}: {
-		title?: string;
-		count?: number | string;
-		class?: string;
-		bodyClass?: string;
-		actions?: Snippet;
-		children?: Snippet;
-	} = $props();
+	}: TableFiltersProps = $props();
 </script>
 
 <div class={['mb-6 rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm', className]}>
@@ -28,12 +21,16 @@
 		</h3>
 		{#if actions}
 			{@render actions()}
+		{:else}
+			<slot name="actions" />
 		{/if}
 	</div>
 
 	<div class={bodyClass}>
 		{#if children}
 			{@render children()}
+		{:else}
+			<slot />
 		{/if}
 	</div>
 </div>

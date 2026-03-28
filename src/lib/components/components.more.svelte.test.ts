@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import '@testing-library/jest-dom/vitest';
+import { tick } from 'svelte';
 
 import Alert from './Alert.svelte';
 import Toast from './Toast.svelte';
@@ -13,6 +14,7 @@ import InputField from './input/InputField.svelte';
 import Textarea from './input/Textarea.svelte';
 import Select from './Select.svelte';
 import Notification from './notifications/Notification.svelte';
+import TableFilters from './table/TableFilters.svelte';
 
 describe('Alert component', () => {
 	it('renders alert role and forwards classes', () => {
@@ -70,6 +72,80 @@ describe('Modal component', () => {
 
 		expect(screen.getByText('Dialog title')).toBeInTheDocument();
 		expect(screen.getByRole('button', { name: 'Подтвердить' })).toBeInTheDocument();
+	});
+
+	it('renders legacy slots when snippets are not passed', () => {
+		render(Modal, {
+			props: {
+				title: 'Legacy modal'
+			},
+			slots: {
+				default: '<div>Legacy content</div>',
+				buttons: '<button type="button">Legacy action</button>'
+			}
+		});
+
+		expect(screen.getByText('Legacy content')).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Legacy action' })).toBeInTheDocument();
+	});
+
+	it('syncs opened bindable state with dialog open/close methods', async () => {
+		const showModal = vi.fn(function (this: HTMLDialogElement) {
+			Object.defineProperty(this, 'open', { configurable: true, value: true, writable: true });
+		});
+		const close = vi.fn(function (this: HTMLDialogElement) {
+			Object.defineProperty(this, 'open', { configurable: true, value: false, writable: true });
+		});
+
+		const originalShowModal = HTMLDialogElement.prototype.showModal;
+		const originalClose = HTMLDialogElement.prototype.close;
+
+		HTMLDialogElement.prototype.showModal = showModal;
+		HTMLDialogElement.prototype.close = close;
+
+		try {
+			const view = render(Modal, {
+				props: {
+					opened: true,
+					noActions: true
+				}
+			});
+
+			await tick();
+			expect(showModal).toHaveBeenCalledTimes(1);
+
+			await view.rerender({ opened: false, noActions: true });
+			await tick();
+			expect(close).toHaveBeenCalledTimes(1);
+		} finally {
+			HTMLDialogElement.prototype.showModal = originalShowModal;
+			HTMLDialogElement.prototype.close = originalClose;
+		}
+	});
+
+	it('keeps backward-compatible behavior when opened is not bound', async () => {
+		const close = vi.fn();
+		const originalClose = HTMLDialogElement.prototype.close;
+		HTMLDialogElement.prototype.close = close;
+
+		try {
+			const view = render(Modal, {
+				props: {
+					title: 'Legacy open flow',
+					noActions: true
+				}
+			});
+
+			const dialog = document.querySelector('dialog') as HTMLDialogElement;
+			Object.defineProperty(dialog, 'open', { configurable: true, value: true, writable: true });
+
+			await view.rerender({ title: 'Legacy open flow 2', noActions: true });
+			await tick();
+
+			expect(close).not.toHaveBeenCalled();
+		} finally {
+			HTMLDialogElement.prototype.close = originalClose;
+		}
 	});
 });
 
@@ -215,5 +291,22 @@ describe('Notification component', () => {
 		expect(screen.getByText('Info')).toBeInTheDocument();
 		expect(screen.getByText('Some text')).toBeInTheDocument();
 		expect(document.querySelector('.card')).toHaveClass('card_opacity');
+	});
+});
+
+describe('TableFilters component', () => {
+	it('renders legacy actions and default slots when snippets are not passed', () => {
+		render(TableFilters, {
+			props: {
+				title: 'Filters'
+			},
+			slots: {
+				actions: '<button type="button">Legacy reset</button>',
+				default: '<input aria-label="search" />'
+			}
+		});
+
+		expect(screen.getByRole('button', { name: 'Legacy reset' })).toBeInTheDocument();
+		expect(screen.getByLabelText('search')).toBeInTheDocument();
 	});
 });
