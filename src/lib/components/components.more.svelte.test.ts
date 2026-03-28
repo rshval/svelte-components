@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import '@testing-library/jest-dom/vitest';
 import { tick } from 'svelte';
+import { createRawSnippet } from 'svelte';
 
 import Alert from './Alert.svelte';
 import Toast from './Toast.svelte';
@@ -74,19 +75,24 @@ describe('Modal component', () => {
 		expect(screen.getByRole('button', { name: 'Подтвердить' })).toBeInTheDocument();
 	});
 
-	it('renders legacy slots when snippets are not passed', () => {
+	it('renders content via snippets API', () => {
+		const children = createRawSnippet(() => ({
+			render: () => '<div>Snippet content</div>'
+		}));
+		const buttons = createRawSnippet(() => ({
+			render: () => '<button type="button">Snippet action</button>'
+		}));
+
 		render(Modal, {
 			props: {
-				title: 'Legacy modal'
-			},
-			slots: {
-				default: '<div>Legacy content</div>',
-				buttons: '<button type="button">Legacy action</button>'
+				title: 'Snippet modal',
+				children,
+				buttons
 			}
 		});
 
-		expect(screen.getByText('Legacy content')).toBeInTheDocument();
-		expect(screen.getByRole('button', { name: 'Legacy action' })).toBeInTheDocument();
+		expect(screen.getByText('Snippet content')).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Snippet action' })).toBeInTheDocument();
 	});
 
 	it('syncs opened bindable state with dialog open/close methods', async () => {
@@ -295,18 +301,23 @@ describe('Notification component', () => {
 });
 
 describe('TableFilters component', () => {
-	it('renders legacy actions and default slots when snippets are not passed', () => {
+	it('renders actions and children snippets', () => {
+		const actions = createRawSnippet(() => ({
+			render: () => '<button type="button">Snippet reset</button>'
+		}));
+		const children = createRawSnippet(() => ({
+			render: () => '<input aria-label="search" />'
+		}));
+
 		render(TableFilters, {
 			props: {
-				title: 'Filters'
-			},
-			slots: {
-				actions: '<button type="button">Legacy reset</button>',
-				default: '<input aria-label="search" />'
+				title: 'Filters',
+				actions,
+				children
 			}
 		});
 
-		expect(screen.getByRole('button', { name: 'Legacy reset' })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Snippet reset' })).toBeInTheDocument();
 		expect(screen.getByLabelText('search')).toBeInTheDocument();
 	});
 });

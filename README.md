@@ -106,7 +106,6 @@ Use-case: confirmations, forms, and content cards with user actions.
 | Events   | `onclose`                                                                                      |
 | Bindings | `bind:element`, `bind:send`, `bind:opened`                                                     |
 | Snippets | `children`, `buttons`                                                                          |
-| Slots (legacy) | default, `buttons`                                                                    |
 
 #### Bindable vs readonly contract
 
@@ -119,7 +118,7 @@ Decision matrix:
 
 | Scenario | Use bindable | Use readonly |
 | --- | --- | --- |
-| Parent needs to call `showModal()` / `close()` | `bind:element` | `title`, content snippets/slots |
+| Parent needs to call `showModal()` / `close()` | `bind:element` | `title`, content snippets |
 | Parent replaces submit handler dynamically | `bind:send` | static labels and styles |
 | Parent controls open/close via state | `bind:opened` | title/content/action styling |
 | Static informational modal | no | readonly props only |
@@ -199,16 +198,28 @@ Compatibility note: if `opened` is not bound, `Modal` keeps legacy behavior and 
 </Modal>
 ```
 
-#### Legacy slots compatibility (migration-safe)
+#### Migration from legacy slots to snippets
 
 ```svelte
-<Modal bind:element={modalElem} title="Legacy modal">
-	<div class="p-4">Legacy content</div>
+<!-- Before (legacy slot syntax) -->
+<Modal bind:element={modalElem} title="Legacy modal example">
+	<div>Legacy content</div>
 	<button slot="buttons" class="btn btn-primary">Legacy action</button>
+</Modal>
+
+<!-- After (snippet/render API) -->
+<Modal bind:element={modalElem} title="Snippet modal example">
+	{#snippet children()}
+		<div>Legacy content</div>
+	{/snippet}
+
+	{#snippet buttons()}
+		<button class="btn btn-primary">Legacy action</button>
+	{/snippet}
 </Modal>
 ```
 
-`Modal` supports both snippet and legacy slot composition in the current release line. Prefer snippets for new code; keep slots while migrating existing pages.
+`Modal` internals are now fully snippet/render based (Svelte 5 safe). Existing usage where content is passed between component tags remains compatible, but new code should use `children` and `buttons` snippets explicitly.
 
 ### Toast
 
@@ -282,7 +293,6 @@ Use-case: list pages (orders/events/customers) with filters and pagination.
 | Props    | `title`, `count`, `bodyClass`, `class` |
 | Events   | none                                   |
 | Snippets | `#snippet actions()` + children        |
-| Slots (legacy) | `slot="actions"` + default slot |
 
 Readonly props contract: `TableFiltersProps`.
 
@@ -378,16 +388,29 @@ Readonly props contract: `TableFiltersProps`.
 />
 ```
 
-#### Legacy slots compatible example
+#### Migration from legacy slots to snippets
 
 ```svelte
-<TableFilters title="Filters" count={rows.length} bodyClass="grid grid-cols-1 gap-3 md:grid-cols-4">
+<!-- Before -->
+<TableFilters title="Filters">
 	<Button slot="actions" class="btn-ghost btn-sm" onclick={resetFilters}>Reset</Button>
 
 	<input class="input-bordered input input-sm" placeholder="Search" />
 	<Button class="btn-sm btn-primary" onclick={load}>Apply</Button>
 </TableFilters>
+
+<!-- After -->
+<TableFilters title="Filters">
+	{#snippet actions()}
+		<Button class="btn-ghost btn-sm" onclick={resetFilters}>Reset</Button>
+	{/snippet}
+
+	<input class="input-bordered input input-sm" placeholder="Search" />
+	<Button class="btn-sm btn-primary" onclick={load}>Apply</Button>
+</TableFilters>
 ```
+
+`TableFilters` internals are snippet/render-only in current releases. Legacy slot syntax can still be migrated gradually, but snippet syntax is the recommended target.
 
 #### Example action-cell component (`ActionButtons.svelte`)
 

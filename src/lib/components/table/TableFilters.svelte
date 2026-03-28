@@ -21,16 +21,10 @@
 		</h3>
 		{#if actions}
 			{@render actions()}
-		{:else}
-			<slot name="actions" />
 		{/if}
 	</div>
 
 	<div class={bodyClass}>
-		{#if children}
-			{@render children()}
-		{:else}
-			<slot />
-		{/if}
+		{@render children?.()}
 	</div>
 </div>

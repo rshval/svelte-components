@@ -40,6 +40,11 @@
 		onCloseProp?.(e);
 	}
 
+	function getSendHandler() {
+		if (typeof send !== 'function') return undefined;
+		return (event: MouseEvent) => send(event);
+	}
+
 	$effect(() => {
 		if (!element || !element.isConnected) return;
 		if (opened === undefined) return;
@@ -75,11 +80,7 @@
 			<h3 class="text-lg font-bold">{title}</h3>
 		{/if}
 
-		{#if children}
-			{@render children?.()}
-		{:else}
-			<slot />
-		{/if}
+		{@render children?.()}
 
 		{#if !noActions}
 			<div class="modal-action">
@@ -87,11 +88,9 @@
 					{#if buttons}
 						{@render buttons?.()}
 					{:else}
-						<slot name="buttons">
-							<button class="btn" disabled={btnDisabled} onclick={send}
-								>{btnText ? btnText : 'Отправить'}</button
-							>
-						</slot>
+						<button class="btn" disabled={btnDisabled} onclick={getSendHandler()}
+							>{btnText ? btnText : 'Отправить'}</button
+						>
 					{/if}
 				</form>
 			</div>
