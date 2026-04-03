@@ -1,6 +1,6 @@
 {
 	"name": "@rshval/svelte-components",
-	"version": "1.3.6",
+	"version": "1.3.7",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
