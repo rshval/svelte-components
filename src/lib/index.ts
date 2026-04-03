@@ -87,6 +87,7 @@ export { getColorByValue, isObject } from './helpers/functions.js';
 export { default as api } from './plugins/api.js';
 export { default as geoserviceApi } from './plugins/geoservice-api.js';
 export { storageGet, storageSet, storageRemove } from './plugins/storage.js';
+export { default as statusBar } from './status-bar.js';
 export {
 	createApiClient,
 	createSocketClient,
