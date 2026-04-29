@@ -15,7 +15,10 @@ type NativeScanPlugin = {
 	requestPermissions?: () => Promise<{ camera?: string }>;
 	addListener?: (
 		eventName: 'barcodeScanned',
-		listener: (event: { barcode?: { rawValue?: string; displayValue?: string }; rawValue?: string }) => void
+		listener: (event: {
+			barcode?: { rawValue?: string; displayValue?: string };
+			rawValue?: string;
+		}) => void
 	) => Promise<{ remove: () => Promise<void> }>;
 	startScan?: (options?: { formats?: string[] }) => Promise<unknown>;
 	stopScan?: () => Promise<unknown>;
@@ -108,7 +111,9 @@ export function createQrScanner(options: CreateQrScannerOptions = {}) {
 		}
 
 		if (navigator.permissions?.query) {
-			const cameraPermission = await navigator.permissions.query({ name: 'camera' as PermissionName });
+			const cameraPermission = await navigator.permissions.query({
+				name: 'camera' as PermissionName
+			});
 			const normalized = mapPermission(cameraPermission.state);
 			permission.set(normalized);
 			return normalized;

@@ -115,14 +115,20 @@
 	{/if}
 
 	{#if showScanResult && scanResultState !== 'idle'}
-		<div class={['qr-scanner__status', scanResultState === 'success' ? 'qr-scanner__status--success' : 'qr-scanner__status--error']}>
+		<div
+			class={[
+				'qr-scanner__status',
+				scanResultState === 'success' ? 'qr-scanner__status--success' : 'qr-scanner__status--error'
+			]}
+		>
 			{#if scanResultState === 'success'}
 				<svg class="qr-scanner__status-icon" viewBox="0 0 24 24" aria-hidden="true">
 					<path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"></path>
 				</svg>
 			{:else}
 				<svg class="qr-scanner__status-icon" viewBox="0 0 24 24" aria-hidden="true">
-					<path d="m18.3 5.7-1-1L12 10l-5.3-5.3-1 1L11 11l-5.3 5.3 1 1L12 12l5.3 5.3 1-1L13 11z"></path>
+					<path d="m18.3 5.7-1-1L12 10l-5.3-5.3-1 1L11 11l-5.3 5.3 1 1L12 12l5.3 5.3 1-1L13 11z"
+					></path>
 				</svg>
 			{/if}
 		</div>

@@ -10,7 +10,7 @@
 </script>
 
 <div class="grid gap-4 md:grid-cols-2">
-	<div class="card bg-base-100 border-base-300 border shadow-sm">
+	<div class="card border border-base-300 bg-base-100 shadow-sm">
 		<div class="card-body gap-4">
 			<h3 class="card-title">Базовые элементы</h3>
 			<Alert class="alert-info">Компонент Alert отображается корректно</Alert>
@@ -22,7 +22,7 @@
 		</div>
 	</div>
 
-	<div class="card bg-base-100 border-base-300 border shadow-sm">
+	<div class="card border border-base-300 bg-base-100 shadow-sm">
 		<div class="card-body gap-4">
 			<h3 class="card-title">Состояния</h3>
 			<div class="flex items-center justify-between gap-4">
@@ -35,7 +35,7 @@
 		</div>
 	</div>
 
-	<div class="card bg-base-100 border-base-300 border shadow-sm md:col-span-2">
+	<div class="card border border-base-300 bg-base-100 shadow-sm md:col-span-2">
 		<div class="card-body gap-4">
 			<h3 class="card-title">Toast</h3>
 			<div class="relative min-h-28 rounded-box border border-dashed border-base-300 p-2">

@@ -12,6 +12,18 @@ import { CapacitorHttp } from '@capacitor/core';
 import { storageGet } from './storage.js';
 import type { GetResult } from '@capacitor/preferences';
 
+const isFormData = (value: unknown): value is FormData =>
+	typeof FormData !== 'undefined' && value instanceof FormData;
+
+const parseFetchResponse = async (response: Response) => {
+	const contentType = response.headers.get('content-type') ?? '';
+	if (contentType.includes('application/json')) {
+		return response.json();
+	}
+
+	return response.text();
+};
+
 async function send({
 	method,
 	path,
@@ -26,7 +38,7 @@ async function send({
 	controller?: AbortController;
 }) {
 	const opts: Api.Opts = { method, headers: {} };
-	if (data) {
+	if (data && !isFormData(data)) {
 		opts.headers['Content-Type'] = 'application/json';
 		opts.data = data;
 	}
@@ -41,6 +53,36 @@ async function send({
 	}
 	if (controller) {
 		opts.signal = controller.signal;
+	}
+
+	if (isFormData(data)) {
+		const headers = new Headers(opts.headers);
+		headers.delete('Content-Type');
+
+		try {
+			const response = await fetch(path, {
+				method,
+				body: data,
+				headers,
+				signal: controller?.signal
+			});
+
+			if (response.ok || response.status === 422) {
+				return parseFetchResponse(response);
+			}
+
+			return response;
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				if (err.name == 'AbortError') {
+					return { aborted: true };
+				}
+
+				return null;
+			}
+
+			return null;
+		}
 	}
 
 	let res: HttpResponse;

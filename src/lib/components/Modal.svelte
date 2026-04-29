@@ -66,11 +66,11 @@
 	id={dialogId}
 	bind:this={element}
 	onclose={handleNativeClose}
-	class={['modal', 'modal-bottom', 'sm:modal-middle' , 'overflow-hidden', className]}
+	class={['modal', 'modal-bottom', 'sm:modal-middle', 'overflow-hidden', className]}
 	{...props}
 >
 	<div
-		class={['modal-box min-h-26 max-h-[calc(100dvh-2rem)] overflow-y-auto', classNameBox]}
+		class={['modal-box max-h-[calc(100dvh-2rem)] min-h-26 overflow-y-auto', classNameBox]}
 		style={styleBox}
 		use:clickOutside={onClose}
 		class:flex

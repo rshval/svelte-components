@@ -10,9 +10,11 @@ describe('parseQrPayload', () => {
 		expect(payload.path).toBe('/board/tickets/scanner');
 	});
 
-
 	it('uses provided baseUrl for relative payloads', () => {
-		const payload = parseQrPayload('/board/tickets/scanner?ticket=EVT-777', 'https://tickets.example');
+		const payload = parseQrPayload(
+			'/board/tickets/scanner?ticket=EVT-777',
+			'https://tickets.example'
+		);
 
 		expect(payload.url).toBe('https://tickets.example/board/tickets/scanner?ticket=EVT-777');
 		expect(payload.ticketNumber).toBe('EVT-777');
@@ -26,9 +28,12 @@ describe('parseQrPayload', () => {
 		expect(payload.ticketNumber).toBeUndefined();
 	});
 
-
 	it('uses provided checkInPath for check-in payload recognition', () => {
-		const payload = parseQrPayload('/custom/check-in?ticket=EVT-123', 'https://tickets.example', '/custom/check-in');
+		const payload = parseQrPayload(
+			'/custom/check-in?ticket=EVT-123',
+			'https://tickets.example',
+			'/custom/check-in'
+		);
 
 		expect(payload.kind).toBe('check-in-link');
 		expect(payload.ticketNumber).toBe('EVT-123');

@@ -10,6 +10,7 @@
 	import IconPhotoX from '@tabler/icons-svelte-runes/icons/photo-x';
 	import IconPhotoStar from '@tabler/icons-svelte-runes/icons/photo-star';
 	import IconCircleX from '@tabler/icons-svelte-runes/icons/circle-x';
+	import { createUploadFormData } from './upload-form-data.js';
 
 	interface UploadErrorContext {
 		fileName?: string;
@@ -21,6 +22,7 @@
 		assetsPost,
 		path,
 		file,
+		uploadOnMount = true,
 		selected = false,
 		disabled = false,
 		isNew = false,
@@ -34,6 +36,7 @@
 		path?: string;
 		assetsPost: string;
 		file?: Blob | File;
+		uploadOnMount?: boolean;
 		selected: boolean;
 		disabled: boolean;
 		isNew?: boolean;
@@ -73,15 +76,19 @@
 	$effect(() => {
 		if (file) {
 			const reader = new FileReader();
-			if (isNew) {
+			if (isNew && uploadOnMount) {
 				isLoading = true;
 				reader.onload = async (e: ProgressEvent<FileReader>) => {
 					if (typeof e.target?.result === 'string') {
 						fileSrc = e.target.result;
 						try {
-							const formData = new FormData();
-							formData.set('image', file);
-							const response = await api.post(assetsPost, formData);
+							const response = await api.post(
+								assetsPost,
+								createUploadFormData({
+									fieldName: 'image',
+									files: [file instanceof File ? file : new File([file], 'image')]
+								})
+							);
 							if (response?.image) {
 								onload?.(response);
 							} else {

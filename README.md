@@ -116,12 +116,12 @@ For `Modal`, use a strict split:
 
 Decision matrix:
 
-| Scenario | Use bindable | Use readonly |
-| --- | --- | --- |
-| Parent needs to call `showModal()` / `close()` | `bind:element` | `title`, content snippets |
-| Parent replaces submit handler dynamically | `bind:send` | static labels and styles |
-| Parent controls open/close via state | `bind:opened` | title/content/action styling |
-| Static informational modal | no | readonly props only |
+| Scenario                                       | Use bindable   | Use readonly                 |
+| ---------------------------------------------- | -------------- | ---------------------------- |
+| Parent needs to call `showModal()` / `close()` | `bind:element` | `title`, content snippets    |
+| Parent replaces submit handler dynamically     | `bind:send`    | static labels and styles     |
+| Parent controls open/close via state           | `bind:opened`  | title/content/action styling |
+| Static informational modal                     | no             | readonly props only          |
 
 Compatibility note: if `opened` is not bound, `Modal` keeps legacy behavior and does not force-close dialog instances opened through `bind:element` + `showModal()`.
 
@@ -724,6 +724,7 @@ const config = createSocketIoConnectionConfig(import.meta.env, {
 - Default supported formats: `image/png`, `image/jpeg` (`.png`, `.jpg`, `.jpeg`).
 - Invalid files are rejected before preview/upload.
 - Upload errors are returned through `onerror`.
+- `FormData` uploads are sent as real `multipart/form-data`; when `multiple` is enabled, uploader requests keep all selected files in a single multipart payload.
 
 ### Props
 

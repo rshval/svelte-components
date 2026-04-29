@@ -12,6 +12,11 @@
 		normalizeAccept,
 		validateFileByRules
 	} from '$lib/helpers/file-validation.js';
+	import {
+		createUploadFormData,
+		extractUploadedImages,
+		type UploadedImagePayload
+	} from './upload-form-data.js';
 
 	interface UploadErrorContext {
 		fileName?: string;
@@ -94,6 +99,9 @@
 				filesReadArr.unshift(createQueueItem(file));
 			}
 			filteredFiles = filesReadArr;
+			if (multiple && assetsPost && filesReadArr.length) {
+				void uploadMultipleFiles(filesReadArr);
+			}
 		}
 		if (fileinputElem?.value) fileinputElem.value = '';
 	}
@@ -154,16 +162,73 @@
 		item: FList,
 		response: { image: { path: string; destination: string; _id: string } }
 	) {
-		if (!response?.image) {
+		const [uploadedImage] = extractUploadedImages(response);
+		if (!uploadedImage?.path) {
 			return;
 		}
 
 		item.new = false;
 		isVisible = false;
-		paths = [...paths, ...[response.image.path.replace(response.image.destination, '')]];
-		ids = [...ids, ...[response.image._id]];
+		paths = [...paths, ...[normalizeImagePath(uploadedImage)]];
+		if (uploadedImage._id) {
+			ids = [...ids, ...[uploadedImage._id]];
+		}
 		await tick();
 		isVisible = true;
+	}
+
+	function normalizeImagePath(image: UploadedImagePayload) {
+		if (!image.path) {
+			return '';
+		}
+
+		return image.destination ? image.path.replace(image.destination, '') : image.path;
+	}
+
+	async function uploadMultipleFiles(items: FList[]) {
+		const uploadableFiles = items
+			.map((item) => item.file)
+			.filter((file): file is File => file instanceof File);
+		if (!uploadableFiles.length) {
+			return;
+		}
+
+		isLoading = true;
+		try {
+			const response = await api.post(
+				assetsPost,
+				createUploadFormData({
+					fieldName: 'image',
+					files: uploadableFiles
+				})
+			);
+			const uploadedImages = extractUploadedImages(response).filter((image) => image.path);
+			if (!uploadedImages.length || uploadedImages.length !== uploadableFiles.length) {
+				throw new Error('EMPTY_UPLOAD_RESPONSE');
+			}
+
+			isVisible = false;
+			filteredFiles = filteredFiles.filter(
+				(currentItem) => !items.some((item) => item.id === currentItem.id)
+			);
+			paths = [
+				...paths,
+				...uploadedImages.map((image) => normalizeImagePath(image)).filter(Boolean)
+			];
+			ids = [
+				...ids,
+				...uploadedImages.map((image) => image._id).filter((id): id is string => Boolean(id))
+			];
+			await tick();
+			isVisible = true;
+		} catch {
+			filteredFiles = filteredFiles.filter(
+				(currentItem) => !items.some((item) => item.id === currentItem.id)
+			);
+			emitError('Failed to upload images. Please try again.', { code: 'UPLOAD_FAILED' });
+		} finally {
+			isLoading = false;
+		}
 	}
 
 	async function onUploadError(item: FList, message: string, context?: UploadErrorContext) {
@@ -237,6 +302,7 @@
 								: undefined}
 							file={item.file}
 							isNew={item.new}
+							uploadOnMount={!multiple}
 							disabled={disabled || isLoading || isDisabled}
 							selected={selectedIndex === i}
 						/>

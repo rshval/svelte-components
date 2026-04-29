@@ -6,6 +6,7 @@
 	import Loader from '$lib/components/Loader.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { validateFileByRules } from '$lib/helpers/file-validation.js';
+	import { createUploadFormData } from './upload-form-data.js';
 
 	let {
 		children,
@@ -40,8 +41,10 @@
 
 	let elemFileInput: HTMLElement;
 
+	type UploadQueueItem = Record<string, unknown> & { file: File };
+
 	let isLoading = $state(false);
-	let filteredFiles: { [key: string]: any }[] = $state([]);
+	let filteredFiles: UploadQueueItem[] = $state([]);
 	let files: FileList | undefined = $state(undefined);
 
 	$effect(() => {
@@ -49,7 +52,7 @@
 	});
 
 	function onReadFiles() {
-		let filesReadArr: object[] = [];
+		let filesReadArr: UploadQueueItem[] = [];
 		if (files?.length) {
 			for (const file of files) {
 				const validationError = validateFileByRules(file, { accept, maxFileSizeMb, validateFile });
@@ -60,38 +63,67 @@
 				filesReadArr = [{ file: file }, ...filesReadArr];
 			}
 			filteredFiles = [...filesReadArr];
+			if (assetsPost && filesReadArr.length) {
+				void uploadFiles(sortFiles(filesReadArr));
+			}
 		}
+		if (elemFileInput instanceof HTMLInputElement && elemFileInput.value) elemFileInput.value = '';
 	}
 
-	let filteredList: { [key: string]: any }[] = $state([]);
-
-	$effect(() => {
-		filteredList = filterKey ? [...filteredFiles].sort((a, b) => a[filterKey]) : filteredFiles;
-	});
-
-	$effect(() => {
-		if (assetsPost && filteredList?.length) {
-			filteredList.forEach((item) => {
-				let reader = new FileReader();
-				onloading?.(true);
-				isLoading = true;
-				reader.onload = async (e: ProgressEvent) => {
-					const formData = new FormData();
-					formData.set('file', item.file);
-					if (fileId) {
-						formData.set('fileId', fileId);
-					}
-					const response = await api.post(assetsPost, formData);
-					if (response?.success) {
-						onload?.(response);
-					}
-					onloading?.(false);
-					isLoading = false;
-				};
-				reader.readAsDataURL(item.file);
-			});
+	function sortFiles(items: UploadQueueItem[]) {
+		if (!filterKey) {
+			return items;
 		}
-	});
+
+		return [...items].sort((a, b) => {
+			const aValue = a[filterKey];
+			const bValue = b[filterKey];
+			if (aValue === bValue) {
+				return 0;
+			}
+
+			return aValue > bValue ? 1 : -1;
+		});
+	}
+
+	async function uploadFiles(items: UploadQueueItem[]) {
+		onloading?.(true);
+		isLoading = true;
+
+		try {
+			if (multiple) {
+				const response = await api.post(
+					assetsPost,
+					createUploadFormData({
+						fieldName: 'file',
+						files: items.map((item) => item.file),
+						extraFields: fileId ? { fileId } : undefined
+					})
+				);
+				if (response?.success) {
+					onload?.(response);
+				}
+				return;
+			}
+
+			for (const item of items) {
+				const response = await api.post(
+					assetsPost,
+					createUploadFormData({
+						fieldName: 'file',
+						files: [item.file],
+						extraFields: fileId ? { fileId } : undefined
+					})
+				);
+				if (response?.success) {
+					onload?.(response);
+				}
+			}
+		} finally {
+			onloading?.(false);
+			isLoading = false;
+		}
+	}
 </script>
 
 <Button onclick={() => elemFileInput.click()} disabled={isLoading} class={[className]}>

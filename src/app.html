@@ -13,7 +13,8 @@
 				const DARK_THEME = 'dark';
 
 				try {
-					const saved = localStorage.getItem(DARK_MODE_KEY) ?? localStorage.getItem(LEGACY_DARK_MODE_KEY);
+					const saved =
+						localStorage.getItem(DARK_MODE_KEY) ?? localStorage.getItem(LEGACY_DARK_MODE_KEY);
 					const fromStorage = saved === 'true' ? true : saved === 'false' ? false : null;
 					const systemDark =
 						typeof window.matchMedia === 'function' &&

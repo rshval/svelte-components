@@ -93,7 +93,10 @@
 	}
 </script>
 
-<div style="position: relative" class="editor p-2 border border-base-300 overflow-hidden rounded-xl">
+<div
+	style="position: relative"
+	class="editor overflow-hidden rounded-xl border border-base-300 p-2"
+>
 	{#if isVisible}
 		<div class="fixed-menu mb-1 rounded-xl bg-base-200 p-2">
 			<Button

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	let { file, isNew = false, path, onerror }: any = $props();
+	let { file, isNew = false, path, onerror, uploadOnMount = true }: any = $props();
 
 	onMount(() => {
-		if (isNew && file) {
+		if (isNew && file && uploadOnMount) {
 			onerror?.('Server rejected file', { fileName: file.name, code: 'SERVER_ERROR' });
 		}
 	});
