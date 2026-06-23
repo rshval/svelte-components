@@ -75,7 +75,10 @@
 		};
 	});
 
-	const handleInputAction = (val: string, extractedCountry?: CountryCode) => {
+	const handleInputAction = (
+		val: string,
+		extractedCountry: CountryCode | undefined = undefined
+	) => {
 		if (props.disabled || props.readonly) return;
 
 		if (extractedCountry) {

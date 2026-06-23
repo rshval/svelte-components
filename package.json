@@ -19,7 +19,8 @@
 		"changeset": "changeset",
 		"version:packages": "changeset version",
 		"release": "npm version patch && npm publish && git push --follow-tags",
-		"smoke:exports": "node ./scripts/smoke-exports.mjs"
+		"smoke:exports": "node ./scripts/smoke-exports.mjs",
+		"smoke:consumer": "node ./scripts/smoke-consumer-build.mjs"
 	},
 	"files": [
 		"dist",
