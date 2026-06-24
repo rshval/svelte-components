@@ -11,6 +11,11 @@
 		id,
 		label,
 		passwordToggle = true,
+		oninput,
+		onchange,
+		onfocus,
+		onblur,
+		onkeydown,
 		...props
 	}: InputFieldProps = $props();
 
@@ -24,7 +29,18 @@
 
 {#snippet control()}
 	<div class={['input', 'w-full', className].filter(Boolean).join(' ')}>
-		<input id={inputId} type={inputType} bind:value class="grow" {...props} />
+		<input
+			id={inputId}
+			type={inputType}
+			bind:value
+			class="grow"
+			oninput={oninput}
+			onchange={onchange}
+			onfocus={onfocus}
+			onblur={onblur}
+			onkeydown={onkeydown}
+			{...props}
+		/>
 		{#if showPasswordToggle}
 			<button
 				type="button"

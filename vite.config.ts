@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync } from 'fs';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
@@ -17,6 +17,8 @@ if (!enableBrowserTests && process.env.VITEST_BROWSER_SKIP_NOTICE !== '1') {
 	);
 }
 
+const browserInstances = [{ browser: 'chromium' as const, headless: true }];
+
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 	test: {
@@ -31,7 +33,7 @@ export default defineConfig({
 								browser: {
 									enabled: true,
 									provider: playwright(),
-									instances: [{ browser: 'chromium', headless: true }]
+									instances: browserInstances
 								},
 								include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
 								exclude: ['src/lib/server/**']

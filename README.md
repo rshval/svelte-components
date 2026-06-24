@@ -227,11 +227,11 @@ Use-case: quick notifications for successful/error actions.
 
 #### Props / Events / Bindings
 
-| Type     | Fields           |
-| -------- | ---------------- |
-| Props    | `items`, `class` |
-| Events   | `onclose(item)`  |
-| Bindings | none             |
+| Type     | Fields                      |
+| -------- | --------------------------- |
+| Props    | `items`, `timeout`, `class` |
+| Events   | `onclose(item)`             |
+| Bindings | none                        |
 
 #### Input variants
 
@@ -251,7 +251,7 @@ Use-case: quick notifications for successful/error actions.
 </script>
 
 {#if toast}
-	<Toast items={[toast]} onclose={() => (toast = null)} />
+	<Toast items={[toast]} timeout={3000} onclose={() => (toast = null)} />
 {/if}
 ```
 
@@ -455,16 +455,18 @@ How it works:
 
 Use-case: text inputs and password fields with toggle.
 
-| Type     | Fields                                                                                                                                              |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Props    | `value`, `label`, `type`, `passwordToggle`, `class`, `id` + HTML attributes (`placeholder`, `autocomplete`, `name`, `spellcheck`, `maxlength` etc.) |
-| Events   | `oninput`, `onchange`, `onfocus`                                                                                                                    |
-| Bindings | `bind:value`                                                                                                                                        |
+| Type     | Fields                                                                                                                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Props    | `value`, `label`, `type`, `passwordToggle`, `class`, `id`, callback props (`oninput`, `onchange`, `onfocus`, `onblur`, `onkeydown`) + native input attributes (`placeholder`, `autocomplete`, `name`, `spellcheck`, `maxlength` etc.) |
+| Events   | callback props only                                                                                                                                                                        |
+| Bindings | `bind:value`                                                                                                                                                                               |
 
 Bindable vs readonly split:
 
 - **Bindable**: `value`.
 - **Readonly**: `label`, `type`, `passwordToggle`, `class`, `id` and other native input attributes.
+
+Compatibility note: use callback props such as `oninput={...}` and `onkeydown={...}`. `InputField` does not expose a custom dispatcher API.
 
 ```svelte
 <InputField bind:value={title} placeholder="Title" />
@@ -473,6 +475,11 @@ Bindable vs readonly split:
 	value={smtpHostDraft}
 	type="text"
 	oninput={(e: any) => (smtpHostDraft = String(e.currentTarget?.value || ''))}
+	onkeydown={(e: KeyboardEvent) => {
+		if (e.key === 'Enter') {
+			console.log('submit');
+		}
+	}}
 />
 ```
 
@@ -480,16 +487,19 @@ Bindable vs readonly split:
 
 Use-case: phone input with country selector.
 
-| Type     | Fields                                                                                  |
-| -------- | --------------------------------------------------------------------------------------- |
-| Props    | `value`, `inputId`, `inputClass`, `placeholder`, `disabledCountry`, `disabled`, `class` |
-| Events   | `onInput`                                                                               |
-| Bindings | `bind:value`, `bind:country`, `bind:valid`, `bind:element`                              |
+| Type     | Fields                                                                                                          |
+| -------- | --------------------------------------------------------------------------------------------------------------- |
+| Props    | `value`, `inputId`, `inputClass`, `placeholder`, `disabledCountry`, `disabled`, `class`, `onInput`            |
+| Events   | callback props only                                                                                             |
+| Bindings | `bind:value`, `bind:country`, `bind:valid`, `bind:element`, `bind:detailedValue`, `bind:options`              |
+
+`bind:valid` is optional. If the parent does not need validation state, `InputPhone` can be used with only `bind:value`.
 
 ```svelte
 <InputPhone
 	inputId="buyer-phone"
 	inputClass="input-bordered input w-full"
+	placeholder="+7 (XXX) XXX-XX-XX"
 	bind:value={buyerPhone}
 />
 ```
@@ -745,7 +755,7 @@ const config = createSocketIoConnectionConfig(import.meta.env, {
 		toastItems = [
 			...toastItems,
 			{
-				type: 'error',
+				type: 'alert',
 				message: context?.fileName ? `${context.fileName}: ${message}` : message
 			}
 		];
@@ -759,7 +769,7 @@ const config = createSocketIoConnectionConfig(import.meta.env, {
 	onerror={handleUploadError}
 />
 
-<Toast items={toastItems} />
+<Toast items={toastItems} timeout={3000} />
 ```
 
 ## Development scripts

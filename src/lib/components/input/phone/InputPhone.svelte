@@ -11,12 +11,13 @@
 		country = $bindable('RU'),
 		element = $bindable(),
 		// Validity
-		valid = $bindable(),
+		valid = $bindable(true),
 		// Phone number details
 		detailedValue = $bindable(),
 		options = $bindable(),
 		class: className,
 		onInput,
+		placeholder = '',
 		inputClass = '',
 		inputId
 	}: {
@@ -25,12 +26,13 @@
 		value: string | E164Number | undefined;
 		country?: CountryCode | undefined;
 		element?: HTMLInputElement | undefined | null;
-		valid: boolean;
+		valid?: boolean;
 		detailedValue?: Partial<DetailedValue>;
 		options?: TelInputOptions;
 		class?: any;
 		inputClass?: any;
 		onInput?: any;
+		placeholder?: string;
 		inputId?: string;
 		widthFull?: boolean;
 	} = $props();
@@ -57,6 +59,7 @@
 	</select>
 	<TelInput
 		{options}
+		{placeholder}
 		bind:country
 		bind:valid
 		bind:value
