@@ -17,11 +17,17 @@
 		}) => void;
 	} = $props();
 
-	function getItemKey(item: { type: 'info' | 'alert' | 'success'; message: string; class?: string }, index: number) {
+	function getItemKey(
+		item: { type: 'info' | 'alert' | 'success'; message: string; class?: string },
+		index: number
+	) {
 		return `${item.type}_${item.message}_${item.class ?? ''}_${index}`;
 	}
 
-	function closeItem(item: { type: 'info' | 'alert' | 'success'; message: string; class?: string }, key?: string) {
+	function closeItem(
+		item: { type: 'info' | 'alert' | 'success'; message: string; class?: string },
+		key?: string
+	) {
 		if (key) {
 			const timer = closeTimers.get(key);
 			if (timer) {

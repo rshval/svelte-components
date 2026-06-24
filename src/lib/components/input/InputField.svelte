@@ -34,11 +34,11 @@
 			type={inputType}
 			bind:value
 			class="grow"
-			oninput={oninput}
-			onchange={onchange}
-			onfocus={onfocus}
-			onblur={onblur}
-			onkeydown={onkeydown}
+			{oninput}
+			{onchange}
+			{onfocus}
+			{onblur}
+			{onkeydown}
 			{...props}
 		/>
 		{#if showPasswordToggle}

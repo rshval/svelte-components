@@ -455,11 +455,11 @@ How it works:
 
 Use-case: text inputs and password fields with toggle.
 
-| Type     | Fields                                                                                                                                                                                     |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Type     | Fields                                                                                                                                                                                                                                |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Props    | `value`, `label`, `type`, `passwordToggle`, `class`, `id`, callback props (`oninput`, `onchange`, `onfocus`, `onblur`, `onkeydown`) + native input attributes (`placeholder`, `autocomplete`, `name`, `spellcheck`, `maxlength` etc.) |
-| Events   | callback props only                                                                                                                                                                        |
-| Bindings | `bind:value`                                                                                                                                                                               |
+| Events   | callback props only                                                                                                                                                                                                                   |
+| Bindings | `bind:value`                                                                                                                                                                                                                          |
 
 Bindable vs readonly split:
 
@@ -487,11 +487,11 @@ Compatibility note: use callback props such as `oninput={...}` and `onkeydown={.
 
 Use-case: phone input with country selector.
 
-| Type     | Fields                                                                                                          |
-| -------- | --------------------------------------------------------------------------------------------------------------- |
-| Props    | `value`, `inputId`, `inputClass`, `placeholder`, `disabledCountry`, `disabled`, `class`, `onInput`            |
-| Events   | callback props only                                                                                             |
-| Bindings | `bind:value`, `bind:country`, `bind:valid`, `bind:element`, `bind:detailedValue`, `bind:options`              |
+| Type     | Fields                                                                                             |
+| -------- | -------------------------------------------------------------------------------------------------- |
+| Props    | `value`, `inputId`, `inputClass`, `placeholder`, `disabledCountry`, `disabled`, `class`, `onInput` |
+| Events   | callback props only                                                                                |
+| Bindings | `bind:value`, `bind:country`, `bind:valid`, `bind:element`, `bind:detailedValue`, `bind:options`   |
 
 `bind:valid` is optional. If the parent does not need validation state, `InputPhone` can be used with only `bind:value`.
 
