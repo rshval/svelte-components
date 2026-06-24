@@ -1,4 +1,9 @@
 import { Capacitor } from '@capacitor/core';
+import type {
+	Barcode,
+	BarcodeFormat as NativeBarcodeFormat,
+	BarcodeScannerPlugin as CapacitorBarcodeScannerPlugin
+} from '@capacitor-mlkit/barcode-scanning';
 import { get, writable } from 'svelte/store';
 import { parseQrPayload } from './parse-qr-payload.js';
 import type {
@@ -10,18 +15,17 @@ import type {
 	QrScannerPermission
 } from './types.js';
 
+type NativeScannedBarcode = Pick<Barcode, 'rawValue' | 'displayValue'>;
+
 type NativeScanPlugin = {
 	checkPermissions?: () => Promise<{ camera?: string }>;
 	requestPermissions?: () => Promise<{ camera?: string }>;
 	addListener?: (
-		eventName: 'barcodeScanned',
-		listener: (event: {
-			barcode?: { rawValue?: string; displayValue?: string };
-			rawValue?: string;
-		}) => void
+		eventName: 'barcodesScanned',
+		listener: (event: { barcodes: NativeScannedBarcode[] }) => void
 	) => Promise<{ remove: () => Promise<void> }>;
-	startScan?: (options?: { formats?: string[] }) => Promise<unknown>;
-	stopScan?: () => Promise<unknown>;
+	startScan?: (options?: { formats?: NativeBarcodeFormat[] }) => Promise<void>;
+	stopScan?: () => Promise<void>;
 };
 
 export function createQrScanner(options: CreateQrScannerOptions = {}) {
@@ -229,15 +233,16 @@ export function createQrScanner(options: CreateQrScannerOptions = {}) {
 		}
 
 		if (nativePlugin.addListener) {
-			nativeListener = await nativePlugin.addListener('barcodeScanned', (event) => {
-				const rawValue = event.barcode?.rawValue || event.barcode?.displayValue || event.rawValue;
+			nativeListener = await nativePlugin.addListener('barcodesScanned', (event) => {
+				const firstBarcode = event.barcodes[0];
+				const rawValue = firstBarcode?.rawValue || firstBarcode?.displayValue;
 				if (rawValue) {
 					handleDetected(rawValue);
 				}
 			});
 		}
 
-		await nativePlugin.startScan({ formats: ['QR_CODE'] });
+		await nativePlugin.startScan({ formats: normalizeNativeFormats(formats) });
 	}
 
 	async function stopNative() {
@@ -295,7 +300,6 @@ export function createQrScanner(options: CreateQrScannerOptions = {}) {
 			fallbackReader = {
 				stop: () => {
 					controls.stop();
-					reader.reset();
 				}
 			};
 		} catch (err) {
@@ -391,6 +395,12 @@ function normalizeWebFormats(formats: QrScannerFormat[]): BarcodeFormat[] {
 		.filter((format): format is BarcodeFormat => format === 'qr_code');
 }
 
+function normalizeNativeFormats(formats: QrScannerFormat[]): NativeBarcodeFormat[] {
+	return formats
+		.map((format) => format.toUpperCase())
+		.filter((format): format is NativeBarcodeFormat => format === 'QR_CODE');
+}
+
 function mapDomException(err: unknown): QrScannerPermission {
 	if (err instanceof DOMException) {
 		if (err.name === 'NotAllowedError') return 'denied';
@@ -402,7 +412,10 @@ function mapDomException(err: unknown): QrScannerPermission {
 async function loadNativePlugin(): Promise<NativeScanPlugin | null> {
 	try {
 		const plugin = await import('@capacitor-mlkit/barcode-scanning');
-		return (plugin as { BarcodeScanner?: NativeScanPlugin }).BarcodeScanner ?? null;
+		return (
+			(plugin as unknown as { BarcodeScanner?: CapacitorBarcodeScannerPlugin }).BarcodeScanner ??
+			null
+		);
 	} catch {
 		return null;
 	}

@@ -769,9 +769,18 @@ npm run dev
 npm run check
 npm run lint
 npm run test
+npm run test:browser
 npm run build
 npm run storybook
 npm run build-storybook
+```
+
+`npm run test` runs the Node/server Vitest suite by default.
+
+`npm run test:browser` runs browser-based Svelte tests and requires Playwright Chromium installed locally:
+
+```bash
+pnpm exec playwright install
 ```
 
 ## Storybook

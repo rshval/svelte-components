@@ -76,8 +76,8 @@
 		}
 
 		return [...items].sort((a, b) => {
-			const aValue = a[filterKey];
-			const bValue = b[filterKey];
+			const aValue = normalizeSortableValue(a[filterKey]);
+			const bValue = normalizeSortableValue(b[filterKey]);
 			if (aValue === bValue) {
 				return 0;
 			}
@@ -86,7 +86,34 @@
 		});
 	}
 
+	function normalizeSortableValue(value: unknown): number | string | bigint {
+		if (typeof value === 'number' || typeof value === 'string' || typeof value === 'bigint') {
+			return value;
+		}
+
+		if (value instanceof Date) {
+			return value.valueOf();
+		}
+
+		if (value && typeof value === 'object') {
+			const primitive = value.valueOf();
+			if (
+				typeof primitive === 'number' ||
+				typeof primitive === 'string' ||
+				typeof primitive === 'bigint'
+			) {
+				return primitive;
+			}
+		}
+
+		return '';
+	}
+
 	async function uploadFiles(items: UploadQueueItem[]) {
+		if (!assetsPost) {
+			return;
+		}
+
 		onloading?.(true);
 		isLoading = true;
 

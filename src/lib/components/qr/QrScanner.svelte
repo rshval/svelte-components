@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import { createQrScanner } from './create-qr-scanner.js';
 	import type { ParsedQrPayload, QrScannerError, QrScannerFormat } from './types.js';
 
@@ -15,24 +15,44 @@
 		isSuccessfulScan?: (payload: ParsedQrPayload) => boolean;
 		vibrateOnDetect?: boolean;
 		beepOnDetect?: boolean;
+		ondetect?: (payload: ParsedQrPayload) => void;
+		onerror?: (error: QrScannerError) => void;
 		onDetect?: (payload: ParsedQrPayload) => void;
 		onError?: (error: QrScannerError) => void;
 		class?: string;
 	};
 
-	const props: Props = $props();
+	const defaultSuccessfulScan = (payload: ParsedQrPayload) =>
+		payload.kind === 'check-in-link' && Boolean(payload.ticketNumber);
+
+	let {
+		autoStart = true,
+		cooldownMs = 2000,
+		formats = ['qr_code'],
+		url,
+		checkInPath,
+		highlightFrame = true,
+		showScanResult = true,
+		scanResultDurationMs = 1400,
+		isSuccessfulScan = defaultSuccessfulScan,
+		vibrateOnDetect = true,
+		beepOnDetect = false,
+		ondetect,
+		onerror,
+		onDetect,
+		onError,
+		class: className
+	}: Props = $props();
 
 	let videoEl: HTMLVideoElement | null = null;
 	let scanResultState = $state<'idle' | 'success' | 'error'>('idle');
 	let scanResultTimeout: ReturnType<typeof setTimeout> | null = null;
-
-	const scanResultDurationMs = props.scanResultDurationMs ?? 1400;
-	const showScanResult = props.showScanResult ?? true;
-
-	const defaultSuccessfulScan = (payload: ParsedQrPayload) =>
-		payload.kind === 'check-in-link' && Boolean(payload.ticketNumber);
-
-	const isSuccessfulScan = props.isSuccessfulScan ?? defaultSuccessfulScan;
+	const initialCooldownMs = untrack(() => cooldownMs);
+	const initialFormats = untrack(() => formats);
+	const initialUrl = untrack(() => url);
+	const initialCheckInPath = untrack(() => checkInPath);
+	const initialVibrateOnDetect = untrack(() => vibrateOnDetect);
+	const initialBeepOnDetect = untrack(() => beepOnDetect);
 
 	function setScanResultState(state: 'success' | 'error') {
 		scanResultState = state;
@@ -46,25 +66,24 @@
 		}, scanResultDurationMs);
 	}
 
-	const dispatch = createEventDispatcher<{ detect: ParsedQrPayload; error: QrScannerError }>();
 	const scanner = createQrScanner({
-		cooldownMs: props.cooldownMs ?? 2000,
-		formats: props.formats ?? ['qr_code'],
-		baseUrl: props.url,
-		checkInPath: props.checkInPath,
-		vibrateOnDetect: props.vibrateOnDetect ?? true,
-		beepOnDetect: props.beepOnDetect ?? false,
+		cooldownMs: initialCooldownMs,
+		formats: initialFormats,
+		baseUrl: initialUrl,
+		checkInPath: initialCheckInPath,
+		vibrateOnDetect: initialVibrateOnDetect,
+		beepOnDetect: initialBeepOnDetect,
 		onDetect: (payload) => {
 			if (showScanResult) {
 				setScanResultState(isSuccessfulScan(payload) ? 'success' : 'error');
 			}
 
-			props.onDetect?.(payload);
-			dispatch('detect', payload);
+			ondetect?.(payload);
+			onDetect?.(payload);
 		},
 		onError: (error) => {
-			props.onError?.(error);
-			dispatch('error', error);
+			onerror?.(error);
+			onError?.(error);
 		}
 	});
 
@@ -72,7 +91,7 @@
 
 	onMount(async () => {
 		scanner.attachVideo(videoEl);
-		if (props.autoStart ?? true) {
+		if (autoStart) {
 			await scanner.start();
 		}
 	});
@@ -102,9 +121,9 @@
 	}
 </script>
 
-<div class={['qr-scanner', props.class]}>
+<div class={['qr-scanner', className]}>
 	<video bind:this={videoEl} class="qr-scanner__video" playsinline muted></video>
-	{#if props.highlightFrame ?? true}
+	{#if highlightFrame}
 		<div
 			class={[
 				'qr-scanner__frame',
