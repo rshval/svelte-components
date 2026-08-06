@@ -1,5 +1,10 @@
 import type { Icon as TypeIcon } from '@tabler/icons-svelte-runes';
-import type { SvelteComponent, ComponentType, SvelteComponentTyped } from 'svelte';
+import type {
+	Component as Svelte5Component,
+	SvelteComponent,
+	ComponentType,
+	SvelteComponentTyped
+} from 'svelte';
 
 declare global {
 	namespace App {}
@@ -57,8 +62,11 @@ declare global {
 		}
 		namespace Table {
 			type Row = Record<string, unknown> & { id?: string; _id?: string };
+			type SortDirection = 'asc' | 'desc';
+			type SortType = 'string' | 'number' | 'date';
 			interface Column {
-				component?: ComponentType<SvelteComponentTyped>;
+				align?: 'left' | 'right';
+				component?: Svelte5Component<any> | ComponentType<SvelteComponentTyped>;
 				id?: string;
 				flex?: boolean;
 				className?: string;
@@ -66,6 +74,8 @@ declare global {
 				nowrap?: boolean;
 				propsFn?: (row: Row) => Record<string, unknown>;
 				props?: Record<string, unknown>;
+				sortable?: boolean;
+				sortType?: SortType;
 				style?: string;
 				title?: string;
 				titleTpl?: () => string;

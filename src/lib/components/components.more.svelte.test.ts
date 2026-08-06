@@ -17,6 +17,7 @@ import Select from './Select.svelte';
 import Notification from './notifications/Notification.svelte';
 import Table from './table/Table.svelte';
 import TableFilters from './table/TableFilters.svelte';
+import TablePagination from './table/TablePagination.svelte';
 
 afterEach(() => {
 	cleanup();
@@ -349,5 +350,98 @@ describe('Table component', () => {
 		});
 
 		expect(screen.getByText('Nothing here')).toBeInTheDocument();
+	});
+
+	it('sorts sortable columns with a tri-state cycle', async () => {
+		render(Table, {
+			props: {
+				columns: [{ id: 'score', title: 'Score', sortable: true, sortType: 'number' }],
+				rows: [
+					{ id: '1', score: 20 },
+					{ id: '2', score: 10 },
+					{ id: '3', score: 15 }
+				]
+			}
+		});
+
+		const sortButton = screen.getByRole('button', { name: 'Score' });
+
+		await fireEvent.click(sortButton);
+		expect(screen.getAllByRole('cell').map((cell) => cell.textContent)).toEqual(['10', '15', '20']);
+		expect(sortButton.closest('th')).toHaveAttribute('aria-sort', 'ascending');
+
+		await fireEvent.click(sortButton);
+		expect(screen.getAllByRole('cell').map((cell) => cell.textContent)).toEqual(['20', '15', '10']);
+		expect(sortButton.closest('th')).toHaveAttribute('aria-sort', 'descending');
+
+		await fireEvent.click(sortButton);
+		expect(screen.getAllByRole('cell').map((cell) => cell.textContent)).toEqual(['20', '10', '15']);
+		expect(sortButton.closest('th')).toHaveAttribute('aria-sort', 'none');
+	});
+
+	it('renders a custom cell component without requiring static props', () => {
+		render(Table, {
+			props: {
+				columns: [{ id: 'active', title: 'Active', component: Switch }],
+				rows: [{ id: '1', active: true }]
+			}
+		});
+
+		expect(screen.getByRole('checkbox')).toBeInTheDocument();
+	});
+});
+
+describe('TablePagination component', () => {
+	it('renders compact range summary and page buttons', async () => {
+		const onPageChange = vi.fn();
+
+		render(TablePagination, {
+			props: {
+				total: 42,
+				page: 2,
+				limit: 10,
+				onPageChange
+			}
+		});
+
+		expect(screen.getByText('11-20 of 42')).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: '2' })).toHaveAttribute('aria-current', 'page');
+
+		await fireEvent.click(screen.getByRole('button', { name: '3' }));
+
+		expect(onPageChange).toHaveBeenCalledWith(3);
+	});
+
+	it('supports localized range separator and aria labels', () => {
+		render(TablePagination, {
+			props: {
+				total: 42,
+				page: 2,
+				limit: 10,
+				rangeSeparator: 'de',
+				rowsPerPageLabel: 'Filas por pagina',
+				previousLabel: 'Pagina anterior',
+				nextLabel: 'Pagina siguiente'
+			}
+		});
+
+		expect(screen.getByText('11-20 de 42')).toBeInTheDocument();
+		expect(screen.getByLabelText('Filas por pagina')).toBeInTheDocument();
+		expect(screen.getByLabelText('Pagina anterior')).toBeInTheDocument();
+		expect(screen.getByLabelText('Pagina siguiente')).toBeInTheDocument();
+	});
+
+	it('uses page label without page number buttons when showPages is not set', () => {
+		render(TablePagination, {
+			props: {
+				total: 42,
+				page: 2,
+				limit: 10,
+				pageLabel: 'Page 2'
+			}
+		});
+
+		expect(screen.getByText('Page 2')).toBeInTheDocument();
+		expect(screen.queryByRole('button', { name: '2' })).not.toBeInTheDocument();
 	});
 });

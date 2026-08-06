@@ -280,29 +280,36 @@ Use-case: list pages (orders/events/customers) with filters and pagination.
 
 #### Table
 
-| Type     | Fields                                                                 |
-| -------- | ---------------------------------------------------------------------- |
-| Props    | `columns`, `rows`, `hover`, `zebra`, `class`, `selected`, `ths`, `trs` |
-| Events   | none (row selection is done via `selected`)                            |
-| Bindings | `bind:rows`, `bind:columns`, `bind:selected`                           |
+| Type     | Fields                                                                                                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Props    | `columns`, `rows`, `hover`, `zebra`, `class`, `selected`, `ths`, `trs`, `sortBy`, `sortDirection`, `manualSort`, `onSortChange` |
+| Events   | none (row selection is done via `selected`)                                                                                     |
+| Bindings | `bind:rows`, `bind:columns`, `bind:selected`                                                                                    |
+
+Sortable columns are opt-in: set `sortable: true` on a column. Optional column fields:
+`sortType: 'string' | 'number' | 'date'` and `align: 'left' | 'right'`.
 
 #### TableFilters
 
-| Type     | Fields                                 |
-| -------- | -------------------------------------- |
-| Props    | `title`, `count`, `bodyClass`, `class` |
-| Events   | none                                   |
-| Snippets | `#snippet actions()` + children        |
+| Type     | Fields                                           |
+| -------- | ------------------------------------------------ |
+| Props    | `title`, `count`, `bodyClass`, `class`, `framed` |
+| Events   | none                                             |
+| Snippets | `#snippet actions()` + children                  |
 
 Readonly props contract: `TableFiltersProps`.
 
 #### TablePagination
 
-| Type     | Fields                                                                                                                                            |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Props    | `total`, `page`, `limit`, `limitOptions`, `onPrev`, `onNext`, `onLimitChange`, `canPrev`, `canNext`, `summary`, `pageLabel`, `showLimit`, `class` |
-| Events   | callback props                                                                                                                                    |
-| Bindings | none                                                                                                                                              |
+| Type     | Fields                                                                                                                                                                                                                                                                |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Props    | `total`, `page`, `limit`, `limitOptions`, `onPrev`, `onNext`, `onPageChange`, `onLimitChange`, `canPrev`, `canNext`, `summary`, `pageLabel`, `rangeSeparator`, `rowsPerPageLabel`, `previousLabel`, `nextLabel`, `paginationLabel`, `showLimit`, `showPages`, `class` |
+| Events   | callback props                                                                                                                                                                                                                                                        |
+| Bindings | none                                                                                                                                                                                                                                                                  |
+
+Use `onPageChange` as the primary pagination callback when page numbers are visible. `onPrev` and
+`onNext` remain supported for legacy prev/next-only pagination. If `pageLabel` is passed and
+`showPages` is not set, page number buttons are hidden to preserve the old compact label layout.
 
 #### End-to-end example
 
@@ -370,21 +377,30 @@ Readonly props contract: `TableFiltersProps`.
 	page={pageNumber}
 	{limit}
 	limitOptions={[10, 20, 50]}
+	onPageChange={(value) => {
+		pageNumber = value;
+		load();
+	}}
 	onLimitChange={(value) => {
 		pageNumber = 1;
 		limit = value;
 		load();
 	}}
-	onPrev={() => {
-		pageNumber -= 1;
-		load();
-	}}
-	onNext={() => {
-		pageNumber += 1;
-		load();
-	}}
-	canPrev={pageNumber > 1}
-	canNext={pageNumber * limit < total}
+/>
+```
+
+For localized pagination copy, override the small text props:
+
+```svelte
+<TablePagination
+	total={42}
+	page={2}
+	limit={10}
+	rangeSeparator="de"
+	rowsPerPageLabel="Filas por pagina"
+	previousLabel="Pagina anterior"
+	nextLabel="Pagina siguiente"
+	paginationLabel="Paginacion de tabla"
 />
 ```
 

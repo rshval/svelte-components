@@ -18,6 +18,7 @@
 		disabled?: boolean;
 		onchange?: any;
 		class?: any;
+		'aria-label'?: string;
 	} = $props();
 </script>
 
