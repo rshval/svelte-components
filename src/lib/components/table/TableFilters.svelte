@@ -6,23 +6,35 @@
 		count,
 		class: className = '',
 		bodyClass = 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5',
+		showHeader = true,
 		actions,
 		children
 	}: TableFiltersProps = $props();
 </script>
 
-<div class={['mb-6 rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm', className]}>
-	<div class="mb-4 flex items-center justify-between gap-3">
-		<h3 class="flex items-center gap-2 text-lg font-semibold">
-			<span>{title}</span>
-			{#if count !== undefined}
-				<span class="badge badge-sm badge-neutral">{count}</span>
+<div
+	class={[
+		'table-filters mb-6 rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm',
+		className
+	]}
+>
+	{#if showHeader}
+		<div class="mb-4 flex items-center justify-between gap-3">
+			<h3 class="flex items-center gap-2 text-lg font-semibold">
+				<span>{title}</span>
+				{#if count !== undefined}
+					<span class="badge badge-sm badge-neutral">{count}</span>
+				{/if}
+			</h3>
+			{#if actions}
+				{@render actions()}
 			{/if}
-		</h3>
-		{#if actions}
+		</div>
+	{:else if actions}
+		<div class="mb-4 flex justify-end">
 			{@render actions()}
-		{/if}
-	</div>
+		</div>
+	{/if}
 
 	<div class={bodyClass}>
 		{@render children?.()}

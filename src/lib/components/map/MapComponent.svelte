@@ -355,11 +355,11 @@
 	oncontextmenu={onContextmenu}
 	onmousemove={handleMousemove}
 	role="none"
->
-	{#if map}
-		{@render children?.()}
-	{/if}
-</div>
+></div>
+
+{#if map}
+	{@render children?.()}
+{/if}
 
 <style>
 	.map {

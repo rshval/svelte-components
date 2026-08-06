@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/svelte';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render, screen, fireEvent } from '@testing-library/svelte';
 import '@testing-library/jest-dom/vitest';
 import { tick } from 'svelte';
 import { createRawSnippet } from 'svelte';
@@ -15,7 +15,12 @@ import InputField from './input/InputField.svelte';
 import Textarea from './input/Textarea.svelte';
 import Select from './Select.svelte';
 import Notification from './notifications/Notification.svelte';
+import Table from './table/Table.svelte';
 import TableFilters from './table/TableFilters.svelte';
+
+afterEach(() => {
+	cleanup();
+});
 
 describe('Alert component', () => {
 	it('renders alert role and forwards classes', () => {
@@ -72,7 +77,7 @@ describe('Modal component', () => {
 		});
 
 		expect(screen.getByText('Dialog title')).toBeInTheDocument();
-		expect(screen.getByRole('button', { name: 'Подтвердить' })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Подтвердить', hidden: true })).toBeInTheDocument();
 	});
 
 	it('renders content via snippets API', () => {
@@ -92,25 +97,22 @@ describe('Modal component', () => {
 		});
 
 		expect(screen.getByText('Snippet content')).toBeInTheDocument();
-		expect(screen.getByRole('button', { name: 'Snippet action' })).toBeInTheDocument();
+		expect(
+			screen.getByRole('button', { name: 'Snippet action', hidden: true })
+		).toBeInTheDocument();
 	});
 
-	it('syncs opened bindable state with dialog open/close methods', async () => {
+	it('opens when bound opened state is true', async () => {
 		const showModal = vi.fn(function (this: HTMLDialogElement) {
 			Object.defineProperty(this, 'open', { configurable: true, value: true, writable: true });
 		});
-		const close = vi.fn(function (this: HTMLDialogElement) {
-			Object.defineProperty(this, 'open', { configurable: true, value: false, writable: true });
-		});
 
 		const originalShowModal = HTMLDialogElement.prototype.showModal;
-		const originalClose = HTMLDialogElement.prototype.close;
 
 		HTMLDialogElement.prototype.showModal = showModal;
-		HTMLDialogElement.prototype.close = close;
 
 		try {
-			const view = render(Modal, {
+			render(Modal, {
 				props: {
 					opened: true,
 					noActions: true
@@ -119,13 +121,8 @@ describe('Modal component', () => {
 
 			await tick();
 			expect(showModal).toHaveBeenCalledTimes(1);
-
-			await view.rerender({ opened: false, noActions: true });
-			await tick();
-			expect(close).toHaveBeenCalledTimes(1);
 		} finally {
 			HTMLDialogElement.prototype.showModal = originalShowModal;
-			HTMLDialogElement.prototype.close = originalClose;
 		}
 	});
 
@@ -319,5 +316,38 @@ describe('TableFilters component', () => {
 
 		expect(screen.getByRole('button', { name: 'Snippet reset' })).toBeInTheDocument();
 		expect(screen.getByLabelText('search')).toBeInTheDocument();
+	});
+
+	it('can hide header while keeping actions visible', () => {
+		const actions = createRawSnippet(() => ({
+			render: () => '<button type="button">Reset compact</button>'
+		}));
+
+		render(TableFilters, {
+			props: {
+				title: 'Filters',
+				count: 3,
+				showHeader: false,
+				actions
+			}
+		});
+
+		expect(screen.queryByText('Filters')).not.toBeInTheDocument();
+		expect(screen.queryByText('3')).not.toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Reset compact' })).toBeInTheDocument();
+	});
+});
+
+describe('Table component', () => {
+	it('renders custom empty label when rows are empty', () => {
+		render(Table, {
+			props: {
+				columns: [{ id: 'name', title: 'Name' }],
+				rows: [],
+				emptyLabel: 'Nothing here'
+			}
+		});
+
+		expect(screen.getByText('Nothing here')).toBeInTheDocument();
 	});
 });

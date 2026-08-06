@@ -32,7 +32,7 @@
 	} = $props();
 </script>
 
-<div class={['mt-4 flex items-center justify-between gap-3', className]}>
+<div class={['table-pagination flex items-center justify-between gap-3 px-3 py-2', className]}>
 	<p class="text-sm text-base-content/70">{summary || `Всего: ${total}`}</p>
 	<div class="flex items-center gap-2">
 		{#if showLimit}

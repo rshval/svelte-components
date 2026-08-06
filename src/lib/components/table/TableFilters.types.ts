@@ -5,6 +5,7 @@ export type TableFiltersProps = {
 	count?: number | string;
 	class?: string;
 	bodyClass?: string;
+	showHeader?: boolean;
 	actions?: Snippet;
 	children?: Snippet;
 };
