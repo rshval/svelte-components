@@ -23,7 +23,8 @@
 		"smoke:exports": "node ./scripts/smoke-exports.mjs",
 		"smoke:consumer": "node ./scripts/smoke-consumer-build.mjs",
 		"smoke:consumer:ssr": "node ./scripts/smoke-consumer-ssr.mjs",
-		"smoke:consumer:dev-ssr": "node ./scripts/smoke-consumer-dev-ssr.mjs"
+		"smoke:consumer:dev-ssr": "node ./scripts/smoke-consumer-dev-ssr.mjs",
+		"smoke:consumer:mapbox": "node ./scripts/smoke-consumer-mapbox.mjs"
 	},
 	"files": [
 		"dist",

@@ -138,7 +138,7 @@
 		{/snippet}
 
 		<input
-			class="input input-bordered input-sm"
+			class="input-bordered input input-sm"
 			type="search"
 			aria-label="Search team"
 			placeholder="Search"
@@ -146,7 +146,7 @@
 			oninput={() => (page = 1)}
 		/>
 		<select
-			class="select select-bordered select-sm"
+			class="select-bordered select select-sm"
 			aria-label="Status"
 			bind:value={status}
 			onchange={() => (page = 1)}

@@ -367,7 +367,7 @@ Use `onPageChange` as the primary pagination callback when page numbers are visi
 	{/snippet}
 
 	<input class="input-bordered input input-sm" placeholder="Search" />
-	<Button class="btn-sm btn-primary" onclick={load}>Apply</Button>
+	<Button class="btn-primary btn-sm" onclick={load}>Apply</Button>
 </TableFilters>
 
 <Table {columns} {rows} hover class="table-sm" />
@@ -412,7 +412,7 @@ For localized pagination copy, override the small text props:
 	<Button slot="actions" class="btn-ghost btn-sm" onclick={resetFilters}>Reset</Button>
 
 	<input class="input-bordered input input-sm" placeholder="Search" />
-	<Button class="btn-sm btn-primary" onclick={load}>Apply</Button>
+	<Button class="btn-primary btn-sm" onclick={load}>Apply</Button>
 </TableFilters>
 
 <!-- After -->
@@ -422,7 +422,7 @@ For localized pagination copy, override the small text props:
 	{/snippet}
 
 	<input class="input-bordered input input-sm" placeholder="Search" />
-	<Button class="btn-sm btn-primary" onclick={load}>Apply</Button>
+	<Button class="btn-primary btn-sm" onclick={load}>Apply</Button>
 </TableFilters>
 ```
 
@@ -454,7 +454,7 @@ For localized pagination copy, override the small text props:
 
 <div class="flex gap-2">
 	<Button class="btn-sm" onclick={handleEdit}><IconEdit size={16} /></Button>
-	<Button class="btn-sm btn-error" onclick={handleDelete}><IconTrash size={16} /></Button>
+	<Button class="btn-error btn-sm" onclick={handleDelete}><IconTrash size={16} /></Button>
 </div>
 ```
 

@@ -8,12 +8,12 @@
 	bodyClass="grid grid-cols-1 gap-3 md:grid-cols-[1fr_160px_auto_auto]"
 >
 	<input
-		class="input input-bordered input-sm"
+		class="input-bordered input input-sm"
 		type="search"
 		aria-label="Search"
 		placeholder="Search"
 	/>
-	<select class="select select-bordered select-sm" aria-label="Status">
+	<select class="select-bordered select select-sm" aria-label="Status">
 		<option>All statuses</option>
 		<option>Active</option>
 		<option>Pending</option>

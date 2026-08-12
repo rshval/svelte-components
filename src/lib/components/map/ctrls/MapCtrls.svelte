@@ -119,7 +119,7 @@
 {/if}
 {#if buttonPitch}
 	<Button
-		class="absolute right-1 z-40 btn-circle text-sm! btn-soft"
+		class="absolute right-1 z-40 btn-circle btn-soft text-sm!"
 		style="top: calc(40% + {$deviceInfoStore?.type === 'desctop' ? 150 : 50}px);"
 		onclick={setPitch}>{newPitchName}</Button
 	>

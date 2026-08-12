@@ -133,7 +133,7 @@
 	<div class="flex min-w-max items-center gap-2">
 		{#if showLimit}
 			<select
-				class="select-bordered select select-sm w-auto min-w-18 shrink-0 pr-8"
+				class="select-bordered select w-auto min-w-18 shrink-0 pr-8 select-sm"
 				aria-label={rowsPerPageLabel}
 				value={limit}
 				onchange={(event) =>
@@ -152,7 +152,7 @@
 	<nav class="flex w-full items-center justify-end gap-1 sm:w-auto" aria-label={paginationLabel}>
 		<button
 			type="button"
-			class="btn btn-outline btn-square btn-sm"
+			class="btn btn-square btn-outline btn-sm"
 			disabled={!resolvedCanPrev}
 			title={previousLabel}
 			aria-label={previousLabel}
@@ -170,8 +170,8 @@
 						<button
 							type="button"
 							class={[
-								'btn btn-sm min-w-9 px-2',
-								item === currentPage ? 'btn-primary shadow-sm' : 'btn-ghost'
+								'btn min-w-9 px-2 btn-sm',
+								item === currentPage ? 'shadow-sm btn-primary' : 'btn-ghost'
 							]}
 							aria-current={item === currentPage ? 'page' : undefined}
 							onclick={() => changePage(item)}
@@ -187,7 +187,7 @@
 
 		<button
 			type="button"
-			class="btn btn-outline btn-square btn-sm"
+			class="btn btn-square btn-outline btn-sm"
 			disabled={!resolvedCanNext}
 			title={nextLabel}
 			aria-label={nextLabel}

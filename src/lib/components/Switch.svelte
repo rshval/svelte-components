@@ -6,14 +6,7 @@
 		...props
 	}: {
 		styleType?:
-			| 'primary'
-			| 'secondary'
-			| 'accent'
-			| 'neutral'
-			| 'info'
-			| 'success'
-			| 'warning'
-			| 'error';
+			'primary' | 'secondary' | 'accent' | 'neutral' | 'info' | 'success' | 'warning' | 'error';
 		checked?: boolean;
 		disabled?: boolean;
 		onchange?: any;

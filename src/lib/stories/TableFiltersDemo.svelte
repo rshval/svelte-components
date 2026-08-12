@@ -16,18 +16,18 @@
 	{/snippet}
 
 	<input
-		class="input input-bordered input-sm"
+		class="input-bordered input input-sm"
 		type="search"
 		aria-label="Search"
 		placeholder="Search customers"
 	/>
-	<select class="select select-bordered select-sm" aria-label="Status">
+	<select class="select-bordered select select-sm" aria-label="Status">
 		<option>All statuses</option>
 		<option>Active</option>
 		<option>Pending</option>
 		<option>Blocked</option>
 	</select>
-	<select class="select select-bordered select-sm" aria-label="Role">
+	<select class="select-bordered select select-sm" aria-label="Role">
 		<option>All roles</option>
 		<option>Admin</option>
 		<option>Manager</option>
