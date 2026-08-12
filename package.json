@@ -138,8 +138,8 @@
 		"esm-env": "^1.2.2",
 		"libphonenumber-js": "^1.13.10",
 		"mapbox-gl": "^3.28.1",
-		"uniqolor": "^1.1.1",
-		"socket.io-client": "^4.8.1"
+		"socket.io-client": "^4.8.1",
+		"uniqolor": "^1.1.1"
 	},
 	"keywords": [
 		"svelte",
@@ -159,7 +159,7 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"packageManager": "pnpm@10.30.3",
+	"packageManager": "pnpm@11.21.0",
 	"engines": {
 		"node": ">=20.0.0"
 	}
