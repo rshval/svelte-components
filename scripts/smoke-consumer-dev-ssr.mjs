@@ -32,11 +32,12 @@ try {
 	await writeFile(
 		path.join(fixtureRoot, 'src', 'App.svelte'),
 		`<script>
-	import { Button, ImagesUploader } from '@rshval/svelte-components';
+	import { Button, ImagesUploader, MapComponent } from '@rshval/svelte-components';
 </script>
 
 <Button>SSR smoke</Button>
 <ImagesUploader assetsGet="/assets" assetsPost="/upload" pathPrefix="" />
+<MapComponent lat={0} lng={0} zoom={1} />
 `
 	);
 

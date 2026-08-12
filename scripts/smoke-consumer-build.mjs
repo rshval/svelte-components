@@ -45,7 +45,7 @@ mount(App, { target: document.getElementById('app') });
 	await writeFile(
 		path.join(fixtureRoot, 'src', 'App.svelte'),
 		`<script>
-	import { InputField, InputPhone } from '@rshval/svelte-components';
+	import { InputField, InputPhone, MapComponent } from '@rshval/svelte-components';
 
 	let textValue = $state('secret');
 	let phoneValue = $state(undefined);
@@ -56,6 +56,7 @@ mount(App, { target: document.getElementById('app') });
 <div>
 	<InputField label="Пароль" type="password" bind:value={textValue} />
 	<InputPhone bind:value={phoneValue} bind:country={country} bind:valid={valid} />
+	<MapComponent lat={0} lng={0} zoom={1} />
 </div>
 `
 	);
