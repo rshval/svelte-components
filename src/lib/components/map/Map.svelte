@@ -26,7 +26,7 @@
 		zoom = 15,
 		maxZoom = 17,
 		initialCenter = defaultInitialCenter,
-		clickCoordinates,
+		clickCoordinates: _clickCoordinates,
 		buttonNavigate,
 		buttonPitch,
 		...props

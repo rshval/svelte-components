@@ -4,8 +4,7 @@ export default function createPopperAction() {
 	let popperElement: HTMLElement | null;
 	let popperTooltip: HTMLElement | null;
 	let popperParams: object | undefined;
-	// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-	let popper: any | null;
+	let popper: ReturnType<typeof createPopper> | null;
 
 	function initialisePopper() {
 		if (popperElement && popperTooltip) {

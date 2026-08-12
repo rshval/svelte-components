@@ -136,13 +136,13 @@
 		[paths[index], paths[0]] = [paths[0], paths[index]];
 		[ids[index], ids[0]] = [ids[0], ids[index]];
 		await tick();
-		onCancel(item, index);
+		onCancel(item);
 		isVisible = true;
 	}
 
 	let isLoading = $state(false);
 	let isDisabled = $state(false);
-	async function onRemove(item: FList, index: number) {
+	async function onRemove(item: FList) {
 		if (item.path) {
 			isDisabled = true;
 			const result = await api.del(assetsPost + '/' + item.path);
@@ -152,7 +152,7 @@
 				ids = ids?.filter((i: string | object) => i !== result.image._id);
 				await tick();
 				isVisible = true;
-				onCancel(item, index);
+				onCancel(item);
 			}
 			isDisabled = false;
 		}
@@ -240,7 +240,7 @@
 		emitError(message, context);
 	}
 
-	function onCancel(item: FList, index: number) {
+	function onCancel(item: FList) {
 		if (selectedItem?.path === item.path) {
 			selectedItem = null;
 			selectedIndex = null;
@@ -287,14 +287,14 @@
 					>
 						<ImagesUploaderItem
 							onmain={() => onMain(item, i)}
-							onremove={() => onRemove(item, i)}
+							onremove={() => onRemove(item)}
 							onload={(response: any) => onLoad(item, response)}
 							onerror={(message: string, context?: UploadErrorContext) =>
 								onUploadError(item, message, {
 									...context,
 									fileName: context?.fileName || item.file?.name
 								})}
-							oncancel={() => onCancel(item, i)}
+							oncancel={() => onCancel(item)}
 							{assetsPost}
 							path={item.path
 								? (assetsGet ? assetsGet + '/' + item.path : item.path) +

@@ -62,7 +62,6 @@
 
 	// обработчик события изменения пиксельных координат
 	function handleMove() {
-		isTweened = true;
 		tween.target = 1;
 		const currentCoords = map?.getCenter();
 		if (map && currentCoords) {
@@ -79,9 +78,7 @@
 		duration: 400,
 		easing: cubicOut
 	});
-	let isTweened = $state(false);
 	function handleMoveend() {
-		isTweened = false;
 		tween.target = 0;
 	}
 	//end animation

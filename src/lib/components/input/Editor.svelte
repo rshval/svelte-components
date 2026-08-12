@@ -13,8 +13,10 @@
 	import IconList from '@tabler/icons-svelte-runes/icons/list';
 	import Button from '$lib/components/Button.svelte';
 
-	let { value = $bindable(), disabled = false }: { value: string | undefined; disabled?: boolean } =
-		$props();
+	let {
+		value = $bindable(),
+		disabled: _disabled = false
+	}: { value: string | undefined; disabled?: boolean } = $props();
 
 	let bubbleMenu: HTMLElement;
 	let element: HTMLElement;
@@ -57,7 +59,7 @@
 				// force re-render so `editor.isActive` works as expected
 				editor = editor;
 			},
-			onFocus({ editor, event }) {
+			onFocus() {
 				// The editor is focused.
 			},
 			onUpdate({ editor }) {
@@ -65,7 +67,7 @@
 				// The content has changed.
 				getActiveButtons(); //get1
 			},
-			onSelectionUpdate({ editor }) {
+			onSelectionUpdate() {
 				// The selection has changed.
 				getActiveButtons(); //get2
 			}

@@ -7,6 +7,20 @@ import { createServer } from 'vite';
 const repoRoot = process.cwd();
 const tempRoot = await mkdtemp(path.join(os.tmpdir(), 'svelte-components-dev-ssr-smoke-'));
 const fixtureRoot = path.join(tempRoot, 'consumer');
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function ssrLoadModuleWithPrebundleRetry(server, modulePath) {
+	try {
+		return await server.ssrLoadModule(modulePath);
+	} catch (error) {
+		if (error?.code !== 'ERR_OUTDATED_OPTIMIZED_DEP') {
+			throw error;
+		}
+
+		await wait(100);
+		return server.ssrLoadModule(modulePath);
+	}
+}
 
 try {
 	await mkdir(path.join(fixtureRoot, 'src'), { recursive: true });
@@ -68,7 +82,7 @@ export function renderApp() {
 	});
 
 	try {
-		const module = await server.ssrLoadModule('/src/entry-server.js');
+		const module = await ssrLoadModuleWithPrebundleRetry(server, '/src/entry-server.js');
 		const result = module.renderApp();
 
 		if (typeof result?.body !== 'string' || !result.body.includes('SSR smoke')) {

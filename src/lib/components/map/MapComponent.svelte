@@ -225,7 +225,7 @@
 			resetLongpressTimer();
 			if (!resizeStart) resizeStart = true;
 			if (timeoutResizingId) clearTimeout(timeoutResizingId);
-			tick();
+			void tick();
 			timeoutResizingId = setTimeout(() => {
 				resizeStart = false;
 			}, 300);
@@ -248,7 +248,11 @@
 	 * Custom events
 	 */
 	$effect(() => {
-		resizeStart === true ? map?.fire?.('resizestart') : map?.fire?.('resizeend');
+		if (resizeStart === true) {
+			map?.fire?.('resizestart');
+		} else {
+			map?.fire?.('resizeend');
+		}
 	});
 
 	$effect(() => {

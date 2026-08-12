@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const packageDir = new URL('..', import.meta.url);
-const packagePath = path.join(packageDir.pathname, 'package.json');
-const srcRoot = path.join(packageDir.pathname, 'src', 'lib');
+const packageDir = fileURLToPath(new URL('..', import.meta.url));
+const packagePath = path.join(packageDir, 'package.json');
+const srcRoot = path.join(packageDir, 'src', 'lib');
 
 const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 const declared = new Set([
@@ -53,7 +54,7 @@ for (const filePath of sourceFiles) {
 			if (internalPrefixes.some((prefix) => specifier.startsWith(prefix))) continue;
 			const packageName = normalizePackageName(specifier);
 			if (!imported.has(packageName)) imported.set(packageName, new Set());
-			imported.get(packageName).add(path.relative(packageDir.pathname, filePath));
+			imported.get(packageName).add(path.relative(packageDir, filePath));
 		}
 	}
 }

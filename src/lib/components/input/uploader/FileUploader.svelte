@@ -2,7 +2,6 @@
 	import type { Snippet } from 'svelte';
 	import api from '$lib/plugins/api.js';
 	import FileExportIcon from '@tabler/icons-svelte-runes/icons/file-export';
-	import type { Component } from 'svelte';
 	import Loader from '$lib/components/Loader.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { validateFileByRules } from '$lib/helpers/file-validation.js';
@@ -21,8 +20,7 @@
 		onload,
 		maxFileSizeMb,
 		validateFile,
-		onerror,
-		...props
+		onerror
 	}: {
 		children?: Snippet;
 		icon?: Snippet;
@@ -44,7 +42,6 @@
 	type UploadQueueItem = Record<string, unknown> & { file: File };
 
 	let isLoading = $state(false);
-	let filteredFiles: UploadQueueItem[] = $state([]);
 	let files: FileList | undefined = $state(undefined);
 
 	$effect(() => {
@@ -62,7 +59,6 @@
 				}
 				filesReadArr = [{ file: file }, ...filesReadArr];
 			}
-			filteredFiles = [...filesReadArr];
 			if (assetsPost && filesReadArr.length) {
 				void uploadFiles(sortFiles(filesReadArr));
 			}

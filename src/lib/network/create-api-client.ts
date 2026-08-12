@@ -3,6 +3,7 @@ import type { EnvLike, HttpMethod, MaybePromise } from './types.js';
 type ApiQueryValue = string | number | boolean | null | undefined;
 
 type QueryParams = Record<string, ApiQueryValue | ApiQueryValue[]>;
+type ProcessLike = { env?: Record<string, string | undefined> };
 
 export interface ApiRequestOptions extends Omit<RequestInit, 'body' | 'method' | 'headers'> {
 	method?: HttpMethod;
@@ -68,8 +69,9 @@ const getEnvValue = <TEnv extends EnvLike>(
 		}
 	}
 
-	if (typeof process !== 'undefined' && process.env?.[key]) {
-		return process.env[key];
+	const processEnv = (globalThis as typeof globalThis & { process?: ProcessLike }).process?.env;
+	if (processEnv?.[key]) {
+		return processEnv[key];
 	}
 
 	return undefined;

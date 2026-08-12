@@ -96,6 +96,7 @@
 		"@tiptap/extension-bubble-menu": "^3.27.1",
 		"@tiptap/extension-underline": "^3.27.1",
 		"@tiptap/starter-kit": "^3.27.1",
+		"@types/node": "^26.2.0",
 		"@vitest/browser": "4.1.10",
 		"@vitest/browser-playwright": "^4.1.10",
 		"@vitest/coverage-v8": "4.1.10",
