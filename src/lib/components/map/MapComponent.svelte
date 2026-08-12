@@ -22,15 +22,15 @@
 		map = $bindable(),
 		mapStyle,
 		accessToken = '',
-		lat, //широта
-		lng, //долгота
-		zoom, //увеличение
-		maxZoom = 20, // на сколько можно приблизить карту
-		minZoom = 4, // на сколько можно отдалить карту
+		lat, // Latitude.
+		lng, // Longitude.
+		zoom, // Zoom.
+		maxZoom = 20, // Maximum map zoom.
+		minZoom = 4, // Minimum map zoom.
 		dragPan = true,
 		dragRotate = true,
 		interactive = true,
-		longpressDuration = 400, //время задержки долгого нажатия
+		longpressDuration = 400, // Long press delay.
 		onlongpress,
 		onclick,
 		ondblclick,
@@ -49,15 +49,15 @@
 		map: Map | undefined;
 		accessToken: string;
 		mapStyle: MapComponent.Style | undefined;
-		lat: number; //широта
-		lng: number; //долгота
-		zoom: number; //увеличение
-		maxZoom: number; // на сколько можно приблизить карту
-		minZoom?: number; // на сколько можно отдалить карту
+		lat: number; // Latitude.
+		lng: number; // Longitude.
+		zoom: number; // Zoom.
+		maxZoom: number; // Maximum map zoom.
+		minZoom?: number; // Minimum map zoom.
 		dragPan?: boolean;
 		dragRotate?: boolean;
 		interactive?: boolean;
-		longpressDuration?: number; //время задержки долгого нажатия
+		longpressDuration?: number; // Long press delay.
 		onlongpress?: (e: MapMouseEvent | MapTouchEvent) => void;
 		onclick?: (e: MapMouseEvent) => void;
 		ondblclick?: (e: MapMouseEvent | CustomEvent) => void;
@@ -141,7 +141,7 @@
 
 	function resetLongpressTimer() {
 		if (longpressTimerId) {
-			clearTimeout(longpressTimerId); // сбрасываем долгое нажатие
+			clearTimeout(longpressTimerId); // Reset long press.
 		}
 	}
 	function onContextmenu(e: Event) {
@@ -156,17 +156,17 @@
 		map?.on('dblclick', (e: MapMouseEvent) => {
 			ondblclick?.(e);
 		});
-		//нажали клик
+		// Pointer pressed.
 		map?.on('mousedown', (e: MapMouseEvent) => {
 			if (e.originalEvent.button !== 2) {
 				resetLongpressTimer();
 				longpressTimerId = setTimeout(() => {
-					// долгое нажатие
+					// Long press.
 					onlongpress?.(e);
 				}, longpressDuration);
 			}
 		});
-		//отпустили клик
+		// Pointer released.
 		map?.on('mouseup', (e: MapMouseEvent) => {
 			onmouseup?.(e);
 			if (e.originalEvent.button === 2) {
@@ -174,7 +174,7 @@
 			}
 			resetLongpressTimer();
 		});
-		//при перетаскивании
+		// During dragging.
 		map?.on('move', () => {
 			// e: MapMouseEvent | MapTouchEvent
 			resetLongpressTimer();
@@ -196,27 +196,27 @@
 		map?.on('flyend', (originalEvent) => {
 			onflyend?.(originalEvent);
 		});
-		//тач событие - палец на экране
+		// Touch event: finger on screen.
 		map?.on('touchstart', (e: MapTouchEvent) => {
 			resetLongpressTimer();
 			$touchFingersCount = ++$touchFingersCount;
 			if ($touchFingersCount === 1) {
 				longpressTimerId = setTimeout(() => {
-					// долгое нажатие
+					// Long press.
 					onlongpress?.(e);
 				}, longpressDuration);
 			}
 		});
 		map?.on('touchend', (e: MapTouchEvent) => {
 			ontouchend?.(e);
-			//тач событие - убрали палец
+			// Touch event: finger removed.
 			$touchFingersCount = 0;
 			// if(longpressTimerId) ontouch(e);
 			resetLongpressTimer();
 		});
 		map?.on('touchcancel', () => {
 			// e: MapTouchEvent
-			//тач событие - отменилось
+			// Touch event canceled.
 			$touchFingersCount = 0;
 			// if(longpressTimerId) ontouch(e);
 			resetLongpressTimer();
@@ -265,7 +265,7 @@
 	});
 	function removeMapControls() {
 		if (map) {
-			//Убираем блок с контролами карты
+			// Remove map controls.
 			let selectors = [
 				'div.mapboxgl-control-container',
 				'div.mapboxgl-canary',
@@ -290,44 +290,44 @@
 
 	async function doMapRiversData() {
 		// // //https://www.google.com/search?q=%D0%BA%D1%80%D1%83%D0%BF%D0%BD%D1%8B%D0%B5+%D1%80%D0%B5%D0%BA%D0%B8+%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8&oq=%D0%BA%D1%80%D1%83%D0%BF%D0%BD%D1%8B%D0%B5+%D1%80%D0%B5%D0%BA%D0%B8+%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8&aqs=chrome..69i57j46i512j0i512l2j46i512j0i512j46i512j0i512l2.3714j0j7&sourceid=chrome&ie=UTF-8
-		// await addRiverToMap(map, '1730417'); //Река Волга
-		// await addRiverToMap(map, '13177938'); //Река Казанка
-		// await addRiverToMap(map, '221993'); //Река Кама
-		// await addRiverToMap(map, '286091607', 'way'); //Река Большой Черемшан (Димитровград)
-		// await addRiverToMap(map, '416351'); //Река Дон
-		// await addRiverToMap(map, '165099'); //Река Белая, Приволжский федеральный округ, Россия
-		// await addRiverToMap(map, '2094452');//Река Клязьма, Центральный федеральный округ, Россия
-		// await addRiverToMap(map, '163223'); //Река Ока, Центральный федеральный округ, Россия
-		// await addRiverToMap(map, '166171'); //Река Лена, Дальневосточный федеральный округ, Россия
-		// await addRiverToMap(map, '2098340');//Река Иртыш, Сибирский федеральный округ, Россия
-		// await addRiverToMap(map, '2469254');//Река Обь, Уральский федеральный округ, Россия
-		// await addRiverToMap(map, '181988'); //Река Енисей, Сибирский федеральный округ, Россия
-		// await addRiverToMap(map, '2172321');//Река Малый Енисей, Сибирский федеральный округ, Россия
-		// await addRiverToMap(map, '172040'); //Река Ангара, Сибирский федеральный округ, Россия
-		// await addRiverToMap(map, '173183'); //Река Нижняя Тунгуска, Сибирский федеральный округ, Россия
-		// await addRiverToMap(map, '197653'); //Река Амур, Дальневосточный федеральный округ, Россия
-		// await addRiverToMap(map, '166236'); //Река Вилюй, Дальневосточный федеральный округ, Россия
-		// await addRiverToMap(map, '161305'); //Река Аргунь, Дальневосточный федеральный округ, Россия
-		// await addRiverToMap(map, '389341'); //Река Москва, Россия
-		// await addRiverToMap(map, '187560'); //Река Хантайка
-		// await addRiverToMap(map, '185104'); //Река Пясина (Норильск)
-		// await addRiverToMap(map, '14030782'); //Река норильская
-		// Моря
-		// await addRiverToMap(map, '3987743'); //Каспийское море
-		// await addRiverToMap(map, '5486417'); //Азовское море
-		// await addRiverToMap(map, '7160849'); //Черное море
-		// await addRiverToMap(map, '9621450');  // Охотское море
-		// await addRiverToMap(map, '12666169'); // Японское море
-		// Водохранилища
-		// await addRiverToMap(map, '166275'); //Вилюйское водохранилище
-		// await addRiverToMap(map, '184889'); //Усть-Хантайское водохранилище
-		// Озера
-		// await addRiverToMap(map, '187461'); // Озеро Хантайское
-		// await addRiverToMap(map, '185402'); // Озеро Пясино
-		// await addRiverToMap(map, '555716'); //Озеро Байкал
-		// Линии
-		// await addRiverToMap(map, '1', 'lines'); //Линия Волго-Донского канала
-		// await addRiverToMap(map, 'kazan', 'lines'); //Линия kazan
+		// await addRiverToMap(map, '1730417'); // Volga River
+		// await addRiverToMap(map, '13177938'); // Kazanka River
+		// await addRiverToMap(map, '221993'); // Kama River
+		// await addRiverToMap(map, '286091607', 'way'); // Bolshoy Cheremshan River
+		// await addRiverToMap(map, '416351'); // Don River
+		// await addRiverToMap(map, '165099'); // Belaya River
+		// await addRiverToMap(map, '2094452'); // Klyazma River
+		// await addRiverToMap(map, '163223'); // Oka River
+		// await addRiverToMap(map, '166171'); // Lena River
+		// await addRiverToMap(map, '2098340'); // Irtysh River
+		// await addRiverToMap(map, '2469254'); // Ob River
+		// await addRiverToMap(map, '181988'); // Yenisei River
+		// await addRiverToMap(map, '2172321'); // Maly Yenisei River
+		// await addRiverToMap(map, '172040'); // Angara River
+		// await addRiverToMap(map, '173183'); // Nizhnyaya Tunguska River
+		// await addRiverToMap(map, '197653'); // Amur River
+		// await addRiverToMap(map, '166236'); // Vilyuy River
+		// await addRiverToMap(map, '161305'); // Argun River
+		// await addRiverToMap(map, '389341'); // Moskva River
+		// await addRiverToMap(map, '187560'); // Khantayka River
+		// await addRiverToMap(map, '185104'); // Pyasina River
+		// await addRiverToMap(map, '14030782'); // Norilskaya River
+		// Seas
+		// await addRiverToMap(map, '3987743'); // Caspian Sea
+		// await addRiverToMap(map, '5486417'); // Azov Sea
+		// await addRiverToMap(map, '7160849'); // Black Sea
+		// await addRiverToMap(map, '9621450'); // Okhotsk Sea
+		// await addRiverToMap(map, '12666169'); // Japan Sea
+		// Reservoirs
+		// await addRiverToMap(map, '166275'); // Vilyuy Reservoir
+		// await addRiverToMap(map, '184889'); // Ust-Khantayka Reservoir
+		// Lakes
+		// await addRiverToMap(map, '187461'); // Khantayskoye Lake
+		// await addRiverToMap(map, '185402'); // Pyasino Lake
+		// await addRiverToMap(map, '555716'); // Baikal Lake
+		// Lines
+		// await addRiverToMap(map, '1', 'lines'); // Volga-Don Canal line
+		// await addRiverToMap(map, 'kazan', 'lines'); // Kazan line
 	}
 
 	async function doMapStyleLoaded() {

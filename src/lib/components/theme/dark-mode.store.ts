@@ -50,7 +50,7 @@ function removeSystemThemeWatcher() {
 	systemThemeListener = null;
 }
 /**
- * Включенный режим - меняет стиль карты и интерфейса.
+ * Enabled mode changes map and interface style.
  */
 const darkModeStore = {
 	subscribe: darkMode.subscribe,

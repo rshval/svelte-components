@@ -39,7 +39,7 @@
 			}
 		}
 	});
-	//Перетаскивание
+	// Dragging
 	$effect(() => {
 		if (isMount) {
 			if ($uimapPointsMouseover && $isMouseDown) {

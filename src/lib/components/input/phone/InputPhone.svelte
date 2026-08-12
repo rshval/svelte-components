@@ -46,7 +46,7 @@
 		name="Country"
 		bind:value={country}
 	>
-		<option value={undefined} hidden={country !== undefined} disabled selected>Страна</option>
+		<option value={undefined} hidden={country !== undefined} disabled selected>Country</option>
 		{#each normalizedCountries as currentCountry (currentCountry.id)}
 			<option
 				value={currentCountry.iso2}

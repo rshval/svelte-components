@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/Switch.svelte';
+import Component from './SwitchDemo.svelte';
 
 const meta = {
 	title: 'Components/Switch',

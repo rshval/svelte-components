@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/input/Textarea.svelte';
+import Component from './TextareaDemo.svelte';
 
 const meta = {
 	title: 'Components/input/Textarea',

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/input/uploader/FileUploader.svelte';
+import Component from './FileUploaderDemo.svelte';
 
 const meta = {
 	title: 'Components/input/uploader/FileUploader',

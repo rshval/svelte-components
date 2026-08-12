@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/Button.svelte';
+import Component from './ButtonShowcase.svelte';
 
 const meta = {
 	title: 'Components/Button',

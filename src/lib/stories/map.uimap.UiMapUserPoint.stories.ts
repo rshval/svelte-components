@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/map/uimap/UiMapUserPoint.svelte';
+import Component from './MapMockDemo.svelte';
 
 const meta = {
 	title: 'Components/map/uimap/UiMapUserPoint',
 	component: Component,
-	tags: ['autodocs']
+	tags: ['autodocs'],
+	args: {
+		variant: 'user'
+	}
 } satisfies Meta<Component>;
 
 export default meta;

@@ -12,19 +12,19 @@
 <div class="grid gap-4 md:grid-cols-2">
 	<div class="card border border-base-300 bg-base-100 shadow-sm">
 		<div class="card-body gap-4">
-			<h3 class="card-title">Базовые элементы</h3>
-			<Alert class="alert-info">Компонент Alert отображается корректно</Alert>
+			<h3 class="card-title">Base elements</h3>
+			<Alert class="alert-info">Alert component renders correctly</Alert>
 			<div class="flex items-center gap-2">
 				<Badge class="badge-primary">New</Badge>
 				<Badge class="badge-outline">v1.1.6</Badge>
 			</div>
-			<Button class="btn-primary">Кнопка Button</Button>
+			<Button class="btn-primary">Button component</Button>
 		</div>
 	</div>
 
 	<div class="card border border-base-300 bg-base-100 shadow-sm">
 		<div class="card-body gap-4">
-			<h3 class="card-title">Состояния</h3>
+			<h3 class="card-title">States</h3>
 			<div class="flex items-center justify-between gap-4">
 				<span>Switch</span>
 				<Switch bind:checked styleType="success" />
@@ -42,8 +42,8 @@
 				<Toast
 					class="toast-end"
 					items={[
-						{ type: 'success', message: 'Данные сохранены' },
-						{ type: 'info', message: 'Тема Storybook применена' }
+						{ type: 'success', message: 'Data saved' },
+						{ type: 'info', message: 'Storybook theme applied' }
 					]}
 				/>
 			</div>

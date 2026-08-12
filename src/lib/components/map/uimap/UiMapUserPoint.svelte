@@ -59,7 +59,7 @@
 		if (map) map.off('move', handleMove);
 	});
 
-	// обработчик события изменения пиксельных координат
+	// Handles pixel coordinate changes.
 	function handleMove() {
 		const lonLat = $geolocationStore;
 		if (map && lonLat) {
@@ -99,7 +99,7 @@
 		bind:offsetWidth={width}
 		style="transform: translate({x}px, {y}px);"
 	>
-		<div class="tooltip tooltip-info" data-tip="Вы здесь">
+		<div class="tooltip tooltip-info" data-tip="You are here">
 			{#if pointType === 'standing'}
 				<div
 					class="user-icon border border-base-300"

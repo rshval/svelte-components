@@ -43,7 +43,7 @@
 		{#if button}
 			{@render button?.()}
 		{:else}
-			<label for="my-drawer" class="btn drawer-button btn-primary">Навигация</label>
+			<label for="my-drawer" class="btn drawer-button btn-primary">Navigation</label>
 		{/if}
 	</div>
 	<div class="drawer-side">

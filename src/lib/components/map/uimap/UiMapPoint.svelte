@@ -78,7 +78,7 @@
 		isShowDetail = false;
 	});
 
-	// обработчик события изменения пиксельных координат
+	// Handles pixel coordinate changes.
 	function handleMove() {
 		const lonLat = geolocation;
 		if (map && lonLat) {

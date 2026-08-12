@@ -47,7 +47,7 @@
 				class="btn btn-ghost btn-xs"
 				tabindex="-1"
 				onclick={() => (passwordVisible = !passwordVisible)}
-				aria-label={passwordVisible ? 'Скрыть пароль' : 'Показать пароль'}
+				aria-label={passwordVisible ? 'Hide password' : 'Show password'}
 				disabled={Boolean(props.disabled)}
 			>
 				{#if passwordVisible}

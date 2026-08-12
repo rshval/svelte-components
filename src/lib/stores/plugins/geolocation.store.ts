@@ -19,7 +19,7 @@ function initGeolocation() {
 	});
 }
 
-let watchId: string; //следим за изменением геопозиции
+let watchId: string; // Tracks geolocation changes.
 
 const geolocation = writable<MapComponent.Geolocation>({ latitude: 0, longitude: 0 });
 

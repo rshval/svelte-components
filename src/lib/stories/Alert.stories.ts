@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/Alert.svelte';
+import Component from './AlertShowcase.svelte';
 
 const meta = {
 	title: 'Components/Alert',

@@ -58,3 +58,9 @@
 	<span class="minutes">{paddedMinutes}</span>
 	<span class="seconds">:{paddedSeconds}</span>
 </span>
+
+<style>
+	.timer {
+		display: inline-flex;
+	}
+</style>

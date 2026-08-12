@@ -158,7 +158,7 @@
 		{/if}
 		{@render children?.()}
 	{:else}
-		<Loader class="loading-sm" /> Загрузка...
+		<Loader class="loading-sm" /> Loading...
 	{/if}
 </Button>
 

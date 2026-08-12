@@ -73,12 +73,12 @@ describe('Modal component', () => {
 		render(Modal, {
 			props: {
 				title: 'Dialog title',
-				btnText: 'Подтвердить'
+				btnText: 'Confirm'
 			}
 		});
 
 		expect(screen.getByText('Dialog title')).toBeInTheDocument();
-		expect(screen.getByRole('button', { name: 'Подтвердить', hidden: true })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Confirm', hidden: true })).toBeInTheDocument();
 	});
 
 	it('renders content via snippets API', () => {
@@ -170,17 +170,17 @@ describe('Popup component', () => {
 
 describe('BreadCrumbs component', () => {
 	const list = [
-		{ title: 'Главная', href: '/' },
-		{ title: 'Каталог', href: '/catalog' },
-		{ title: 'Текущая' }
+		{ title: 'Home', href: '/' },
+		{ title: 'Catalog', href: '/catalog' },
+		{ title: 'Current' }
 	];
 
 	it('renders non-seo list with links except last item', () => {
 		render(BreadCrumbs, { props: { list } });
 
-		expect(screen.getByRole('link', { name: 'Главная' })).toHaveAttribute('href', '/');
-		expect(screen.getByRole('link', { name: 'Каталог' })).toHaveAttribute('href', '/catalog');
-		expect(screen.getByText('Текущая')).toBeInTheDocument();
+		expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+		expect(screen.getByRole('link', { name: 'Catalog' })).toHaveAttribute('href', '/catalog');
+		expect(screen.getByText('Current')).toBeInTheDocument();
 	});
 
 	it('renders seo microdata structure when seo=true', () => {
@@ -219,12 +219,12 @@ describe('Input components', () => {
 		});
 
 		const input = screen.getByLabelText('Password');
-		const toggleButton = screen.getByRole('button', { name: 'Показать пароль' });
+		const toggleButton = screen.getByRole('button', { name: 'Show password' });
 
 		expect(input).toHaveAttribute('type', 'password');
 		await fireEvent.click(toggleButton);
 		expect(input).toHaveAttribute('type', 'text');
-		expect(screen.getByRole('button', { name: 'Скрыть пароль' })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Hide password' })).toBeInTheDocument();
 	});
 
 	it('Textarea renders id and class names', () => {

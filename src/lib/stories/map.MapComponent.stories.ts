@@ -1,13 +1,33 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/map/MapComponent.svelte';
+import RealComponent from '../components/map/MapComponent.svelte';
+import MockComponent from './MapMockDemo.svelte';
 
 const meta = {
 	title: 'Components/map/MapComponent',
-	component: Component,
-	tags: ['autodocs']
-} satisfies Meta<Component>;
+	component: RealComponent,
+	tags: ['autodocs'],
+	args: {
+		accessToken: '',
+		mapStyle: {
+			id: 'light',
+			title: 'Light',
+			value: 'mapbox/light-v11'
+		},
+		lat: 55.78,
+		lng: 49.12,
+		zoom: 12,
+		maxZoom: 17
+	}
+} satisfies Meta<RealComponent>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const TokenRequired: Story = {
+	render: () => ({
+		Component: MockComponent,
+		props: {
+			variant: 'component'
+		}
+	})
+};

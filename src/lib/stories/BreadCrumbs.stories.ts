@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/sveltekit';
 import Component from '../components/BreadCrumbs.svelte';
 
 const items = [
-	{ title: 'Главная', href: '/' },
-	{ title: 'Каталог', href: '/catalog' },
-	{ title: 'Карточка' }
+	{ title: 'Home', href: '/' },
+	{ title: 'Catalog', href: '/catalog' },
+	{ title: 'Product card' }
 ];
 
 const meta = {

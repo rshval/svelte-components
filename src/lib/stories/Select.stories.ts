@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/sveltekit';
 import Component from '../components/Select.svelte';
 
 const options = [
-	{ value: 'new', label: 'Новый' },
-	{ value: 'processing', label: 'В обработке' },
-	{ value: 'done', label: 'Выполнен' }
+	{ value: 'new', label: 'New' },
+	{ value: 'processing', label: 'Processing' },
+	{ value: 'done', label: 'Done' }
 ];
 
 const meta = {
@@ -12,8 +12,8 @@ const meta = {
 	component: Component,
 	tags: ['autodocs'],
 	args: {
-		label: 'Статус',
-		placeholder: 'Выберите статус',
+		label: 'Status',
+		placeholder: 'Choose status',
 		options,
 		value: ''
 	}
@@ -27,5 +27,28 @@ export const Default: Story = {};
 export const Selected: Story = {
 	args: {
 		value: 'processing'
+	}
+};
+
+export const Required: Story = {
+	args: {
+		required: true,
+		value: ''
+	}
+};
+
+export const Disabled: Story = {
+	args: {
+		disabled: true,
+		value: 'done'
+	}
+};
+
+export const EmptyOptions: Story = {
+	args: {
+		label: 'Assignee',
+		placeholder: 'No assignees available',
+		options: [],
+		value: ''
 	}
 };

@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/map/ctrls/MapCtrlScale.svelte';
+import Component from './MapMockDemo.svelte';
 
 const meta = {
 	title: 'Components/map/ctrls/MapCtrlScale',
 	component: Component,
-	tags: ['autodocs']
+	tags: ['autodocs'],
+	args: {
+		variant: 'scale'
+	}
 } satisfies Meta<Component>;
 
 export default meta;

@@ -37,7 +37,7 @@
 	});
 
 	/**
-	 * Приближение и отдоление
+	 * Zoom in and zoom out.
 	 * @param value
 	 */
 	function zoomIn() {
@@ -73,7 +73,7 @@
 	}
 
 	/**
-	 * 3d и 2d режим
+	 * 3D and 2D mode.
 	 */
 	let pitch: MapComponent.Pitch = {
 		'2d': 0,

@@ -6,7 +6,7 @@
 		value = $bindable(''),
 		class: className,
 		options = [] as Components.Select.Option[],
-		placeholder = 'Выберите...',
+		placeholder = 'Choose...',
 		disabled = false,
 		required = false,
 		id

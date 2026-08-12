@@ -16,22 +16,26 @@
 		}
 	});
 
-	let distanceValue: number = $state(0);
-	let distanceUnitValue: string = $state('');
 	let metersPerPixel: number | undefined = $state();
+	const scaleDistance = $derived.by(() => {
+		if (!metersPerPixel) return undefined;
 
-	$effect(() => {
-		if (metersPerPixel) {
-			let mToP100 = metersPerPixel * 100;
-			if ($isMilesUnit) {
-				distanceUnitValue = mToP100 >= mileToMeters ? 'ми' : 'каб';
-				distanceValue = mToP100 >= mileToMeters ? mToP100 / mileToMeters : mToP100 / cableToMeters;
-			} else {
-				distanceUnitValue = mToP100 >= kilometerToMeters ? 'км' : 'м';
-				distanceValue = mToP100 >= kilometerToMeters ? mToP100 / kilometerToMeters : mToP100;
-			}
-			distanceValue = Number(Math.round(distanceValue)) || 1;
+		const mToP100 = metersPerPixel * 100;
+		let unit = '';
+		let value = 0;
+
+		if ($isMilesUnit) {
+			unit = mToP100 >= mileToMeters ? 'mi' : 'cbl';
+			value = mToP100 >= mileToMeters ? mToP100 / mileToMeters : mToP100 / cableToMeters;
+		} else {
+			unit = mToP100 >= kilometerToMeters ? 'km' : 'm';
+			value = mToP100 >= kilometerToMeters ? mToP100 / kilometerToMeters : mToP100;
 		}
+
+		return {
+			value: Number(Math.round(value)) || 1,
+			unit
+		};
 	});
 
 	function getDistance() {
@@ -50,11 +54,11 @@
 	}
 </script>
 
-{#if metersPerPixel}
+{#if scaleDistance}
 	<div class="scale">
 		<div class="scale__text" onclick={toggleUnit} role="none" tabindex="-1" onkeypress={() => {}}>
-			{distanceValue}
-			{distanceUnitValue}
+			{scaleDistance.value}
+			{scaleDistance.unit}
 		</div>
 	</div>
 {/if}

@@ -144,25 +144,25 @@
 				onclick={() => editor?.chain().focus().toggleBold().run()}
 				class={[{ 'btn-active': isActiveButtonB }, 'btn-xs']}
 			>
-				Жирный
+				Bold
 			</Button>
 			<Button
 				onclick={() => editor?.chain().focus().toggleItalic().run()}
 				class={[{ 'btn-active': isActiveButtonI }, 'btn-xs']}
 			>
-				<i style="font-weight:300;">Курсив</i>
+				<i style="font-weight:300;">Italic</i>
 			</Button>
 			<Button
 				onclick={() => editor?.chain().focus().toggleUnderline().run()}
 				class={[{ 'btn-active': isActiveButtonU }, 'btn-xs']}
 			>
-				<u style="font-weight:300;">Подчеркнуть</u>
+				<u style="font-weight:300;">Underline</u>
 			</Button>
 			<Button
 				onclick={() => editor?.chain().focus().toggleStrike().run()}
 				class={[{ 'btn-active': isActiveButtonS }, 'btn-xs']}
 			>
-				<s style="font-weight:300;">Зачеркнуть</s>
+				<s style="font-weight:300;">Strike</s>
 			</Button>
 		{/if}
 	</ul>

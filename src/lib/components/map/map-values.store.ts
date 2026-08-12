@@ -7,4 +7,4 @@ export const isMouseDown = writable<boolean>(false);
 export const isPointDraggable = writable<boolean>(false);
 export const mapMouseCoordinates = writable<MapComponent.PixelCoordinates>({ x: 0, y: 0 });
 export const mapPitchValue = writable<number | null>(null);
-export const touchFingersCount = writable<number>(0); // количество пальцев на экране
+export const touchFingersCount = writable<number>(0); // Number of fingers on the screen.

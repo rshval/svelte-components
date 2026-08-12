@@ -89,7 +89,7 @@
 						{@render buttons?.()}
 					{:else}
 						<button class="btn" disabled={btnDisabled} onclick={getSendHandler()}
-							>{btnText ? btnText : 'Отправить'}</button
+							>{btnText ? btnText : 'Submit'}</button
 						>
 					{/if}
 				</form>

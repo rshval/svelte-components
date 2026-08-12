@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/map/Map.svelte';
+import Component from './MapMockDemo.svelte';
 
 const meta = {
 	title: 'Components/map/Map',
 	component: Component,
-	tags: ['autodocs']
+	tags: ['autodocs'],
+	args: {
+		variant: 'full'
+	}
 } satisfies Meta<Component>;
 
 export default meta;

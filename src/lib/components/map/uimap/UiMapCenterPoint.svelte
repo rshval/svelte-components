@@ -60,7 +60,7 @@
 		}
 	});
 
-	// обработчик события изменения пиксельных координат
+	// Handles pixel coordinate changes.
 	function handleMove() {
 		tween.target = 1;
 		const currentCoords = map?.getCenter();

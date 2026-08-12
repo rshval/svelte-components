@@ -28,20 +28,12 @@ export const getSuggestCities = async function (cityName: string) {
 	const response = await postData(
 		`${tildaLink}/city/`,
 		{
-			lang: 'RU',
+			lang: 'EN',
 			pattern: cityName
 		},
 		true
 	);
-	const arr = response.error
-		? []
-		: (response as TildaCity[]).map((i) => {
-				i.fullName = i.fullName
-					.replace('область', 'обл.')
-					.replace(' г ', ' ')
-					.replace(' район,', ' р-н,');
-				return i;
-			});
+	const arr = response.error ? [] : (response as TildaCity[]);
 
 	const data = {
 		cities: arr,

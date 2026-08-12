@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/drawer/Drawer.svelte';
+import Component from './DrawerDemo.svelte';
 
 const meta = {
 	title: 'Components/drawer/Drawer',

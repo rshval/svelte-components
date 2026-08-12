@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/Toast.svelte';
+import Component from './ToastDemo.svelte';
 
 const meta = {
 	title: 'Components/Toast',

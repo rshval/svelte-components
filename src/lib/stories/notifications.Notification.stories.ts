@@ -7,8 +7,8 @@ const meta = {
 	tags: ['autodocs'],
 	args: {
 		notification: {
-			title: 'Новый заказ',
-			text: 'Появилась новая заявка в очереди.'
+			title: 'New order',
+			text: 'A new request appeared in the queue.'
 		},
 		opacity: false,
 		index: 1

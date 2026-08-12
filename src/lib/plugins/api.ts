@@ -3,8 +3,8 @@
 	make calls to api
 */
 /**
- * модуль api использует fetch для http|https запросов
- * (не изучена кросплатформенность web|ios|android)
+ * The API module uses fetch for HTTP/HTTPS requests.
+ * Cross-platform behavior for web/iOS/Android has not been fully verified.
  */
 
 import type { HttpResponse } from '@capacitor/core';

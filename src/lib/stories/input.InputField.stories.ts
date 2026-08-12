@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/sveltekit';
-import Component from '../components/input/InputField.svelte';
+import Component from './InputFieldDemo.svelte';
 
 const meta = {
 	title: 'Components/input/InputField',
@@ -11,11 +11,3 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
-
-export const Password: Story = {
-	args: {
-		label: 'Пароль',
-		type: 'password',
-		placeholder: 'Введите пароль'
-	}
-};

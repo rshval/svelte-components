@@ -1,7 +1,7 @@
 /**
- * модуль storage использует Preferences API
- * для постоянного хранилища ключей и значений для облегченных данных.
- * (заявлена кросплатформенность web|ios|android)
+ * The storage module uses Preferences API
+ * for persistent key-value storage of lightweight data.
+ * Cross-platform behavior for web/iOS/Android is expected.
  * https://capacitorjs.com/docs/apis/preferences
  */
 
