@@ -1,4 +1,5 @@
 export { default as Table } from './Table.svelte';
+export { default as TableStack } from './TableStack.svelte';
 export { default as TableFilters } from './TableFilters.svelte';
 export { default as TablePagination } from './TablePagination.svelte';
 export type { TableFiltersProps } from './TableFilters.types.js';

@@ -1,147 +1,68 @@
 <script lang="ts">
+	import Badge from '../components/Badge.svelte';
 	import Button from '../components/Button.svelte';
-	import Table from '../components/table/Table.svelte';
-	import TableFilters from '../components/table/TableFilters.svelte';
 	import TablePagination from '../components/table/TablePagination.svelte';
-	import TableActionsCell from './TableActionsCell.svelte';
-	import TableActiveCell from './TableActiveCell.svelte';
+	import TableStack from '../components/table/TableStack.svelte';
 
 	const rows: Components.Table.Row[] = [
-		{ id: '1', name: 'Anna Keller', role: 'Manager', status: 'Active', score: 82, active: true },
-		{ id: '2', name: 'Ilya Morozov', role: 'Operator', status: 'Paused', score: 71, active: false },
-		{ id: '3', name: 'Mira Stone', role: 'Admin', status: 'Active', score: 95, active: true },
-		{ id: '4', name: 'Noah Reed', role: 'Support', status: 'Pending', score: 64, active: false },
-		{ id: '5', name: 'Sofia Ray', role: 'Analyst', status: 'Active', score: 89, active: true },
-		{ id: '6', name: 'Leo Grant', role: 'Operator', status: 'Blocked', score: 41, active: false },
-		{ id: '7', name: 'Eva Brooks', role: 'Manager', status: 'Pending', score: 77, active: true },
-		{ id: '8', name: 'Max Payne', role: 'Support', status: 'Active', score: 68, active: true },
-		{ id: '9', name: 'Nina Vale', role: 'Admin', status: 'Paused', score: 73, active: false },
-		{ id: '10', name: 'Oleg North', role: 'Analyst', status: 'Active', score: 91, active: true },
-		{ id: '11', name: 'Lena Hart', role: 'Operator', status: 'Pending', score: 58, active: false },
-		{ id: '12', name: 'Ivan Cruz', role: 'Support', status: 'Blocked', score: 36, active: false },
-		{ id: '13', name: 'Tara Miles', role: 'Manager', status: 'Active', score: 86, active: true },
-		{ id: '14', name: 'Victor Lane', role: 'Analyst', status: 'Paused', score: 69, active: false }
-	];
-
-	const columns: Components.Table.Column[] = [
-		{ id: 'name', title: 'Name', sortable: true },
-		{ id: 'role', title: 'Role', sortable: true },
 		{
-			id: 'status',
-			title: 'Status',
-			sortable: true,
-			tpl: (row) => {
-				const status = String(row.status ?? '');
-				const style =
-					status === 'Active'
-						? 'badge-success'
-						: status === 'Pending'
-							? 'badge-warning'
-							: status === 'Blocked'
-								? 'badge-error'
-								: 'badge-neutral';
-
-				return `<span class="badge badge-sm ${style}">${status}</span>`;
-			}
-		},
-		{ id: 'score', title: 'Score', sortable: true, sortType: 'number', align: 'right' },
-		{
-			id: 'active',
-			title: 'Enabled',
-			component: TableActiveCell,
-			props: {},
-			propsFn: (row) => ({ row })
+			id: '1',
+			title: 'Apple juice',
+			meta: 'Bottle 0.75 l',
+			status: 'Available',
+			stock: 42,
+			price: '$4.50'
 		},
 		{
-			id: 'actions',
-			title: '',
-			align: 'right',
-			component: TableActionsCell,
-			props: {
-				onEdit: (row: Components.Table.Row) => {
-					selected = row;
-				}
-			},
-			propsFn: (row) => ({ row })
+			id: '2',
+			title: 'Orange marmalade',
+			meta: 'Jar 250 g',
+			status: 'Low stock',
+			stock: 3,
+			price: '$6.20'
+		},
+		{
+			id: '3',
+			title: 'Buckwheat granola',
+			meta: 'Pack 400 g',
+			status: 'Paused',
+			stock: 0,
+			price: '$8.10'
 		}
 	];
 
 	let query = $state('');
 	let status = $state('all');
 	let page = $state(1);
-	let limit = $state(5);
-	let selected = $state<Components.Table.Row | undefined>();
-	let sortBy = $state<string | undefined>('score');
-	let sortDirection = $state<Components.Table.SortDirection | undefined>('desc');
+	let limit = $state(2);
 
 	const filteredRows = $derived(
 		rows.filter((row) => {
 			const matchesStatus = status === 'all' || row.status === status;
-			const matchesQuery = Object.values(row).join(' ').toLowerCase().includes(query.toLowerCase());
+			const matchesQuery = Object.values(row)
+				.join(' ')
+				.toLowerCase()
+				.includes(query.trim().toLowerCase());
 
 			return matchesStatus && matchesQuery;
 		})
 	);
-	const sortedRows = $derived(sortRows(filteredRows));
-	const pagedRows = $derived(sortedRows.slice((page - 1) * limit, page * limit));
-
-	function sortRows(items: Components.Table.Row[]) {
-		const key = sortBy;
-		const column = columns.find((item) => item.id === key);
-
-		if (!key || !sortDirection || !column) {
-			return items;
-		}
-
-		return [...items]
-			.map((row, index) => ({ row, index }))
-			.sort((a, b) => {
-				const first = a.row[key];
-				const second = b.row[key];
-				const result =
-					column.sortType === 'number'
-						? Number(first ?? 0) - Number(second ?? 0)
-						: String(first ?? '').localeCompare(String(second ?? ''), undefined, {
-								numeric: true,
-								sensitivity: 'base'
-							});
-
-				return (sortDirection === 'asc' ? result : -result) || a.index - b.index;
-			})
-			.map((item) => item.row);
-	}
+	const pagedRows = $derived(filteredRows.slice((page - 1) * limit, page * limit));
 
 	function resetFilters() {
 		query = '';
 		status = 'all';
 		page = 1;
 	}
-
-	function updateSort(sort: {
-		id: string | undefined;
-		direction: Components.Table.SortDirection | undefined;
-	}) {
-		sortBy = sort.id;
-		sortDirection = sort.direction;
-		page = 1;
-	}
 </script>
 
-<div class="max-w-5xl px-1">
-	<TableFilters
-		title="Team"
-		count={filteredRows.length}
-		bodyClass="grid grid-cols-1 gap-3 md:grid-cols-[1fr_180px_auto]"
-	>
-		{#snippet actions()}
-			<Button class="btn-ghost btn-sm" onclick={resetFilters}>Reset</Button>
-		{/snippet}
-
+<div class="grid max-w-xl gap-3 px-1">
+	<div class="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_160px_auto]">
 		<input
 			class="input-bordered input input-sm"
 			type="search"
-			aria-label="Search team"
-			placeholder="Search"
+			aria-label="Search products"
+			placeholder="Search products"
 			bind:value={query}
 			oninput={() => (page = 1)}
 		/>
@@ -152,40 +73,58 @@
 			onchange={() => (page = 1)}
 		>
 			<option value="all">All statuses</option>
-			<option value="Active">Active</option>
-			<option value="Pending">Pending</option>
+			<option value="Available">Available</option>
+			<option value="Low stock">Low stock</option>
 			<option value="Paused">Paused</option>
-			<option value="Blocked">Blocked</option>
 		</select>
-		<Button class="btn-primary btn-sm">Apply</Button>
-	</TableFilters>
+		<Button class="btn-ghost btn-sm" onclick={resetFilters}>Reset</Button>
+	</div>
 
-	<Table
-		{columns}
-		rows={pagedRows}
-		bind:selected
-		hover
-		zebra
-		manualSort
-		{sortBy}
-		{sortDirection}
-		onSortChange={updateSort}
-		class="table-sm"
-	/>
+	<TableStack rows={pagedRows} ariaLabel="Products" emptyLabel="No products found.">
+		{#snippet row(item)}
+			<div class="grid gap-3">
+				<div class="flex items-start justify-between gap-3">
+					<div class="min-w-0">
+						<div class="font-semibold">{item.title}</div>
+						<div class="text-xs text-base-content/60">{item.meta}</div>
+					</div>
+					<Badge
+						class={item.status === 'Available'
+							? 'badge-sm badge-success'
+							: item.status === 'Low stock'
+								? 'badge-sm badge-warning'
+								: 'badge-sm badge-neutral'}
+					>
+						{item.status}
+					</Badge>
+				</div>
+				<div class="grid grid-cols-2 gap-2 text-sm">
+					<div class="rounded-box bg-base-200 p-2">
+						<div class="text-xs text-base-content/60">Stock</div>
+						<div class="font-medium">{item.stock}</div>
+					</div>
+					<div class="rounded-box bg-base-200 p-2">
+						<div class="text-xs text-base-content/60">Price</div>
+						<div class="font-medium">{item.price}</div>
+					</div>
+				</div>
+				<div class="flex flex-wrap justify-end gap-2">
+					<Button class="btn-outline btn-xs">Open</Button>
+					<Button class="btn-primary btn-xs">Edit</Button>
+				</div>
+			</div>
+		{/snippet}
+	</TableStack>
 
 	<TablePagination
 		total={filteredRows.length}
 		{page}
 		{limit}
-		limitOptions={[5, 10, 25]}
+		limitOptions={[2, 5, 10]}
 		onPageChange={(value) => (page = value)}
 		onLimitChange={(value) => {
 			limit = value;
 			page = 1;
 		}}
 	/>
-
-	{#if selected}
-		<p class="mt-2 text-xs text-base-content/60">Selected: {selected.name}</p>
-	{/if}
 </div>

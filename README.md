@@ -5,7 +5,7 @@ Reusable UI library for Svelte 5.
 Package includes:
 
 - base UI components (`Button`, `InputField`, `Select`, `Modal`, `Toast`, `Alert`);
-- composite components (`Table`, `InputPhone`, `Drawer`, `Notifications`);
+- composite components (`Table`, `TableStack`, `InputPhone`, `Drawer`, `Notifications`);
 - map components built on `mapbox-gl`;
 - helpers and plugins (`api`, `geoserviceApi`, `storage*`, `createApiClient`, `createSocketClient`, `createSocketIoConnectionConfig`);
 - ready-to-use Svelte stores for session, account, network, geolocation, and device info.
@@ -310,6 +310,37 @@ Readonly props contract: `TableFiltersProps`.
 Use `onPageChange` as the primary pagination callback when page numbers are visible. `onPrev` and
 `onNext` remain supported for legacy prev/next-only pagination. If `pageLabel` is passed and
 `showPages` is not set, page number buttons are hidden to preserve the old compact label layout.
+
+#### TableStack
+
+Use-case: mobile/card representation for data-heavy tables where horizontal scrolling would hide important row actions.
+
+`TableStack` is intentionally a small shell, not an automatic table-to-card converter. Keep domain-specific content in the row snippet and use `Table` separately for desktop/tablet layouts when a real table is still the best view.
+
+| Type     | Fields                                                                                          |
+| -------- | ----------------------------------------------------------------------------------------------- |
+| Props    | `rows`, `loading`, `emptyLabel`, `loadingLabel`, `ariaLabel`, `class`, `listClass`, `itemClass` |
+| Events   | none                                                                                            |
+| Bindings | none                                                                                            |
+| Snippets | `row(item, index)`                                                                              |
+
+```svelte
+<script lang="ts">
+	import { TableStack } from '@rshval/svelte-components';
+
+	const rows = [{ id: '1', title: 'Product', stock: 12, price: '$4.50' }];
+</script>
+
+<TableStack {rows} ariaLabel="Products" emptyLabel="No products found.">
+	{#snippet row(item)}
+		<div class="grid gap-2">
+			<div class="font-semibold">{item.title}</div>
+			<div class="text-sm text-base-content/70">Stock: {item.stock}</div>
+			<div class="text-sm font-medium">{item.price}</div>
+		</div>
+	{/snippet}
+</TableStack>
+```
 
 #### End-to-end example
 
@@ -648,6 +679,7 @@ Export: `clickOutside`.
 - `Button`
 - `BreadCrumbs`
 - `Table`
+- `TableStack`
 - `TableFilters`
 - `TablePagination`
 - `InputField`
@@ -685,7 +717,7 @@ Export: `clickOutside`.
 Main export groups from `src/lib/index.ts`:
 
 - Components: `Button`, `Badge`, `InputField`, `Textarea`, `Editor`, `Select`, `Loader`, `Modal`, `Switch`, `Alert`, `Popup`, `BreadCrumbs`, `Timer`, `Toast`;
-- Complex components: `InputPhone`, `Notifications`, `Notification`, `Table`, `Theme`, `ThemeButton`, `Drawer`;
+- Complex components: `InputPhone`, `Notifications`, `Notification`, `Table`, `TableStack`, `Theme`, `ThemeButton`, `Drawer`;
 - Map: `Map`, `MapComponent`, `UiMap*`, `getGeolocation`, mapbox event types;
 - Helpers: `clickOutside`, `blurOnEscape`, `isValid*`, `patternPassword`, `getColorByValue`, `isObject`;
 - Plugins: `api`, `geoserviceApi`, `storageGet/storageSet/storageRemove`;

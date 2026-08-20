@@ -38,6 +38,7 @@ export { default as Notifications } from './components/notifications/Notificatio
 export { default as Notification } from './components/notifications/Notification.svelte';
 export {
 	Table,
+	TableStack,
 	TableFilters,
 	TablePagination,
 	type ColumnType,

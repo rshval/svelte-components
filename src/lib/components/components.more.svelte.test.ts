@@ -18,6 +18,8 @@ import Notification from './notifications/Notification.svelte';
 import Table from './table/Table.svelte';
 import TableFilters from './table/TableFilters.svelte';
 import TablePagination from './table/TablePagination.svelte';
+import TableStack from './table/TableStack.svelte';
+import TableStackFixture from './table/TableStack.test.svelte';
 
 afterEach(() => {
 	cleanup();
@@ -388,6 +390,48 @@ describe('Table component', () => {
 		});
 
 		expect(screen.getByRole('checkbox')).toBeInTheDocument();
+	});
+});
+
+describe('TableStack component', () => {
+	it('renders row snippets inside a semantic list', () => {
+		render(TableStackFixture);
+
+		expect(screen.getByRole('region', { name: 'Products' })).toBeInTheDocument();
+		expect(screen.getByRole('list')).toBeInTheDocument();
+		expect(screen.getAllByRole('listitem')).toHaveLength(2);
+		expect(screen.getByText('1. Apple juice')).toBeInTheDocument();
+		expect(screen.getByText('Paused')).toBeInTheDocument();
+	});
+
+	it('renders default row content when no row snippet is provided', () => {
+		render(TableStack, {
+			props: {
+				rows: [{ id: '1', title: 'Default row' }]
+			}
+		});
+
+		expect(screen.getByText('Default row')).toBeInTheDocument();
+	});
+
+	it('renders localized empty and loading states', async () => {
+		const { rerender } = render(TableStack, {
+			props: {
+				rows: [],
+				emptyLabel: 'No products found.'
+			}
+		});
+
+		expect(screen.getByRole('status')).toHaveTextContent('No products found.');
+
+		await rerender({
+			rows: [],
+			loading: true,
+			loadingLabel: 'Loading products...'
+		});
+
+		expect(screen.getByRole('status')).toHaveTextContent('Loading products...');
+		expect(screen.getByRole('region')).toHaveAttribute('aria-busy', 'true');
 	});
 });
 
