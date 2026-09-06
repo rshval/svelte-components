@@ -5,7 +5,7 @@ Reusable UI library for Svelte 5.
 Package includes:
 
 - base UI components (`Button`, `InputField`, `Select`, `Modal`, `Toast`, `Alert`);
-- composite components (`Table`, `TableStack`, `InputPhone`, `Drawer`, `Notifications`);
+- composite components (`Table`, `TableStack`, `InputPhone`, `Drawer`, `Notifications`, `SwipeNavigation`);
 - map components built on `mapbox-gl`;
 - helpers and plugins (`api`, `geoserviceApi`, `storage*`, `createApiClient`, `createSocketClient`, `createSocketIoConnectionConfig`);
 - ready-to-use Svelte stores for session, account, network, geolocation, and device info.
@@ -47,8 +47,8 @@ npm i @rshval/svelte-components
 Also make sure your project has compatible library dependencies installed:
 
 - `@popperjs/core` — runtime dependency (installed automatically with the package);
-- `svelte`, `@tiptap/*` — peer dependencies that must stay compatible in consumer apps.
-- `@sveltejs/kit` is optional and only needed in consumer apps that use SvelteKit-specific APIs.
+- `svelte`, `@sveltejs/kit`, `@tiptap/*` — peer dependencies that must stay compatible in consumer apps.
+- `html-to-image` and `svelte-gestures` — runtime dependencies used by `SwipeNavigation`.
 
 ### Styling requirements (Tailwind + DaisyUI)
 
@@ -603,6 +603,66 @@ Minimal examples:
 <ThemeButton />
 ```
 
+### SwipeNavigation
+
+Use-case: app-like forward/back transitions for SvelteKit route screens, including swipe-back and a context-aware back button.
+
+`SwipeNavigation` is router-driven: wrap route content in the component and use `appGoto()` for forward navigation. `BackButton` must be rendered inside `SwipeNavigation`; it reads the navigation context and is a no-op when there is no captured back entry.
+
+| Type     | Fields                                           |
+| -------- | ------------------------------------------------ |
+| Props    | `enabled`, `isRouteEnabled`, `navigate`          |
+| Bindings | none                                             |
+| Helpers  | `appGoto`, `registerAppNavigator`                |
+| Context  | `SWIPE_NAVIGATION_CONTEXT`, `SwipeNavigationApi` |
+
+#### SvelteKit layout example
+
+```svelte
+<script lang="ts">
+	import { page } from '$app/state';
+	import { SwipeNavigation } from '@rshval/svelte-components';
+
+	let { children } = $props();
+
+	const swipeRoutes = ['/', '/catalog', '/product', '/shop'];
+
+	function isSwipeRoute(pathname: string) {
+		if (pathname === '/') return true;
+
+		return swipeRoutes
+			.filter((route) => route !== '/')
+			.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+	}
+
+	const swipeEnabled = $derived(isSwipeRoute(page.url.pathname));
+</script>
+
+<SwipeNavigation enabled={swipeEnabled} isRouteEnabled={isSwipeRoute}>
+	{@render children()}
+</SwipeNavigation>
+```
+
+#### Route navigation and back button
+
+```svelte
+<script lang="ts">
+	import { appGoto, BackButton } from '@rshval/svelte-components';
+
+	async function openProduct(id: string) {
+		await appGoto(`/product/${id}`);
+	}
+</script>
+
+<button type="button" class="btn btn-primary" onclick={() => openProduct('42')}>
+	Open product
+</button>
+
+<BackButton text="Back" class="btn btn-ghost" />
+```
+
+For non-default router adapters, pass `navigate={(url) => router.push(url)}` to `SwipeNavigation`.
+
 ### Stores / API / Utils / Directives (non-UI exports)
 
 #### Stores
@@ -684,6 +744,8 @@ Export: `clickOutside`.
 - `TablePagination`
 - `InputField`
 - `InputPhone`
+- `SwipeNavigation`
+- `BackButton`
 - `Switch`
 - `Select`
 - `Toast`
@@ -717,7 +779,8 @@ Export: `clickOutside`.
 Main export groups from `src/lib/index.ts`:
 
 - Components: `Button`, `Badge`, `InputField`, `Textarea`, `Editor`, `Select`, `Loader`, `Modal`, `Switch`, `Alert`, `Popup`, `BreadCrumbs`, `Timer`, `Toast`;
-- Complex components: `InputPhone`, `Notifications`, `Notification`, `Table`, `TableStack`, `Theme`, `ThemeButton`, `Drawer`;
+- Complex components: `InputPhone`, `Notifications`, `Notification`, `Table`, `TableStack`, `Theme`, `ThemeButton`, `Drawer`, `SwipeNavigation`, `BackButton`;
+- Navigation helpers: `appGoto`, `registerAppNavigator`, `SWIPE_NAVIGATION_CONTEXT`, `SwipeNavigationApi`;
 - Map: `Map`, `MapComponent`, `UiMap*`, `getGeolocation`, mapbox event types;
 - Helpers: `clickOutside`, `blurOnEscape`, `isValid*`, `patternPassword`, `getColorByValue`, `isObject`;
 - Plugins: `api`, `geoserviceApi`, `storageGet/storageSet/storageRemove`;

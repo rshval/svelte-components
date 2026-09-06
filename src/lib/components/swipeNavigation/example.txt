@@ -1,0 +1,67 @@
+# +layout.svelte example
+
+<script lang="ts">
+	import { page } from '$app/state';
+	import { SwipeNavigation } from '$lib';
+
+	let { children } = $props();
+
+	/*
+	 * Маршруты, на которых включаем app-like навигацию.
+	 *
+	 * Вложенные страницы тоже включаются автоматически.
+	 *
+	 * Например:
+	 * /product
+	 * /product/123
+	 * /shop
+	 * /shop/my-shop
+	 */
+	const swipeRoutes = [
+		'/',
+		'/catalog',
+		'/product',
+		'/shop'
+	];
+
+	function isSwipeRoute(pathname: string) {
+		if (pathname === '/') {
+			return true;
+		}
+
+		return swipeRoutes
+			.filter((route) => route !== '/')
+			.some(
+				(route) =>
+					pathname === route ||
+					pathname.startsWith(`${route}/`)
+			);
+	}
+
+	const swipeEnabled = $derived(
+		isSwipeRoute(page.url.pathname)
+	);
+</script>
+
+<SwipeNavigation
+	enabled={swipeEnabled}
+	isRouteEnabled={isSwipeRoute}
+>
+	{@render children()}
+</SwipeNavigation>
+
+
+# button navigation example
+
+ <script>
+	  import { BackButton } from "$lib";
+ </script>
+
+<main>
+	<h1>Магазин</h1>
+
+	<p>
+		Теперь можно несколько раз свайпнуть назад.
+	</p>
+	<BackButton/>
+</main>

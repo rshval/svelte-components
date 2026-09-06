@@ -55,6 +55,14 @@ export {
 
 export { Drawer, isOpenedDrawer } from './components/drawer/index.js';
 export {
+	BackButton,
+	SwipeNavigation,
+	SWIPE_NAVIGATION_CONTEXT,
+	appGoto,
+	registerAppNavigator,
+	type SwipeNavigationApi
+} from './components/swipeNavigation/index.js';
+export {
 	Map,
 	MapComponent,
 	UiMap,
